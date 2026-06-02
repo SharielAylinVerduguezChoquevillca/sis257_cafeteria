@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import axios from '@/plugins/axios'
-import type { Categoria } from '@/models/categoria'
+import axios from '../../plugins/axios'
+import type { Categoria } from '../../models/categoria'
 
 const props = defineProps<{
   mostrar: boolean

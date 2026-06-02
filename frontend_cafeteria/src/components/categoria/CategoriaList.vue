@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import axios from '@/plugins/axios'
-import type { Categoria } from '@/models/categoria'
+import axios from '../../plugins/axios'
+import type { Categoria } from '../../models/categoria'
 
 const categorias = ref<Categoria[]>([])
 
@@ -43,14 +43,11 @@ onMounted(() => {
           <td>{{ categoria.nombre }}</td>
           <td>{{ categoria.descripcion }}</td>
           <td>
-            <button
-              class="p-button p-button-warning p-button-sm mr-2"
-              @click="emit('edit', categoria)"
-            >
+            <button class="p-button p-button-warning p-button-sm mr-2" @click="emit('edit', categoria)">
               Editar
             </button>
             <button class="p-button p-button-danger p-button-sm" @click="eliminar(categoria.id)">
-              Eliminar
+              🗑️ Eliminar
             </button>
           </td>
         </tr>

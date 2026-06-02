@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CategoriaList from '@/components/categoria/categoriaList.vue'
-import CategoriaSave from '@/components/categoria/categoriaSave.vue'
+import CategoriaList from '../components/categoria/CategoriaList.vue'
+import CategoriaSave from '../components/categoria/CategoriaSave.vue'
 import { ref } from 'vue'
 import type { Categoria } from '@/models/categoria'
 
