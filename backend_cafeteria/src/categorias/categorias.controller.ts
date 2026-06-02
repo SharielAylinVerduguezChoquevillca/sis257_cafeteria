@@ -13,7 +13,7 @@ import { CreateCategoriaDto } from './dto/create-categoria.dto';
 import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 
 @ApiTags('Categorias')
-@Controller('categorias')
+@Controller({ path: 'categorias', version: '1' })
 export class CategoriasController {
   constructor(private readonly service: CategoriasService) {}
 

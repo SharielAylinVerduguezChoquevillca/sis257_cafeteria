@@ -13,7 +13,7 @@ import { CreateVentaDto } from './dto/create-venta.dto';
 import { UpdateVentaDto } from './dto/update-venta.dto';
 
 @ApiTags('Ventas')
-@Controller('ventas')
+@Controller({ path: 'ventas', version: '1' })
 export class VentasController {
   constructor(private readonly service: VentasService) {}
 

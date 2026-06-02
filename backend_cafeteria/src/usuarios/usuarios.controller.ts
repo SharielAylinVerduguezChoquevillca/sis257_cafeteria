@@ -13,7 +13,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 
 @ApiTags('Usuarios')
-@Controller('usuarios')
+@Controller({ path: 'usuarios', version: '1' })
 export class UsuariosController {
   constructor(private readonly service: UsuariosService) {}
 
