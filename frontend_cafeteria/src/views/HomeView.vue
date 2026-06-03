@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="home-slider owl-carousel">
-      <div class="slider-item" style="background-image: url('/images/bg_1.jpg');">
+      <div class="slider-item" :style="{ backgroundImage: `url(${bg1})` }">
         <div class="overlay"></div>
         <div class="container">
           <div class="row slider-text justify-content-center align-items-center">
@@ -18,7 +18,7 @@
         </div>
       </div>
 
-      <div class="slider-item" style="background-image: url('/images/bg_2.jpg');">
+      <div class="slider-item" :style="{ backgroundImage: `url(${bg2})` }">
         <div class="overlay"></div>
         <div class="container">
           <div class="row slider-text justify-content-center align-items-center">
@@ -35,7 +35,7 @@
         </div>
       </div>
 
-      <div class="slider-item" style="background-image: url('/images/bg_3.jpg');">
+      <div class="slider-item" :style="{ backgroundImage: `url(${bg3})` }">
         <div class="overlay"></div>
         <div class="container">
           <div class="row slider-text justify-content-center align-items-center">
@@ -161,22 +161,22 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="menu-entry">
-                  <a href="#" class="img" style="background-image: url('/images/menu-1.jpg');"></a>
+                  <a href="#" class="img" :style="{ backgroundImage: `url(${menu1})` }"></a>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="menu-entry mt-lg-4">
-                  <a href="#" class="img" style="background-image: url('/images/menu-2.jpg');"></a>
+                  <a href="#" class="img" :style="{ backgroundImage: `url(${menu2})` }"></a>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="menu-entry">
-                  <a href="#" class="img" style="background-image: url('/images/menu-3.jpg');"></a>
+                  <a href="#" class="img" :style="{ backgroundImage: `url(${menu3})` }"></a>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="menu-entry mt-lg-4">
-                  <a href="#" class="img" style="background-image: url('/images/menu-4.jpg');"></a>
+                  <a href="#" class="img" :style="{ backgroundImage: `url(${menu4})` }"></a>
                 </div>
               </div>
             </div>
@@ -185,7 +185,7 @@
       </div>
     </section>
 
-    <section class="ftco-counter ftco-bg-dark img" style="background-image: url('/images/bg_2.jpg');">
+    <section class="ftco-counter ftco-bg-dark img" :style="{ backgroundImage: `url(${bg2})` }">
       <div class="overlay"></div>
       <div class="container">
         <div class="row justify-content-center">
@@ -237,9 +237,15 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import bg1 from '@/assets/images/bg_1.jpg'
+import bg2 from '@/assets/images/bg_2.jpg'
+import bg3 from '@/assets/images/bg_3.jpg'
+import menu1 from '@/assets/images/menu-1.jpg'
+import menu2 from '@/assets/images/menu-2.jpg'
+import menu3 from '@/assets/images/menu-3.jpg'
+import menu4 from '@/assets/images/menu-4.jpg'
 
 onMounted(() => {
-  // Reinicializar el slider después de que Vue monte el componente
   setTimeout(() => {
     const $ = (window as any).$
     if ($ && $.fn.owlCarousel) {
