@@ -43,11 +43,14 @@ onMounted(() => {
           <td>{{ categoria.nombre }}</td>
           <td>{{ categoria.descripcion }}</td>
           <td>
-            <button class="p-button p-button-warning p-button-sm mr-2" @click="emit('edit', categoria)">
+            <button
+              class="p-button p-button-warning p-button-sm mr-2"
+              @click="emit('edit', categoria)"
+            >
               Editar
             </button>
             <button class="p-button p-button-danger p-button-sm" @click="eliminar(categoria.id)">
-              🗑️ Eliminar
+              Eliminar
             </button>
           </td>
         </tr>

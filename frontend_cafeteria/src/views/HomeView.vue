@@ -1,17 +1,59 @@
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import bg1 from '@/assets/images/bg_1.jpg'
+import bg2 from '@/assets/images/bg_2.jpg'
+import bg3 from '@/assets/images/bg_3.jpg'
+import menu1 from '@/assets/images/menu-1.jpg'
+import menu2 from '@/assets/images/menu-2.jpg'
+import menu3 from '@/assets/images/menu-3.jpg'
+import menu4 from '@/assets/images/menu-4.jpg'
+
+onMounted(() => {
+  setTimeout(() => {
+    const $ = (window as any).$
+    if ($ && $.fn.owlCarousel) {
+      $('.home-slider').owlCarousel({
+        loop: true,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        margin: 0,
+        nav: false,
+        autoplayHoverPause: false,
+        items: 1,
+        dots: true,
+        responsive: {
+          0: { items: 1 },
+          600: { items: 1 },
+          1000: { items: 1 }
+        }
+      })
+    }
+  }, 1000)
+})
+</script>
+
 <template>
   <div>
-    <section class="home-slider owl-carousel">
+    <section class="home-slider owl-carousel" style="overflow: hidden; max-height: 750px;">
       <div class="slider-item" :style="{ backgroundImage: `url(${bg1})` }">
         <div class="overlay"></div>
         <div class="container">
           <div class="row slider-text justify-content-center align-items-center">
-            <div class="col-md-8 col-sm-12 text-center ftco-animate">
+            <div class="col-md-8 col-sm-12 text-center">
               <span class="subheading">Bienvenido</span>
-              <h1 class="mb-4">☕ Cafetería El Buen Gusto</h1>
-              <p class="mb-4">Sistema de gestión de ventas para la cafetería El Buen Gusto de Sucre, Bolivia.</p>
+              <h1 class="mb-4">Cafetería El Buen Gusto</h1>
+              <p class="mb-4">
+                Sistema de gestión de ventas para la cafetería El Buen Gusto de Sucre, Bolivia.
+              </p>
               <p>
-                <RouterLink to="/ventas" class="btn btn-primary p-3 px-xl-4 py-xl-3">Nueva Venta</RouterLink>
-                <RouterLink to="/productos" class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3 ml-2">Ver Productos</RouterLink>
+                <RouterLink to="/ventas" class="btn btn-primary p-3 px-xl-4 py-xl-3"
+                  >Nueva Venta</RouterLink
+                >
+                <RouterLink
+                  to="/productos"
+                  class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3 ml-2"
+                  >Ver Productos</RouterLink
+                >
               </p>
             </div>
           </div>
@@ -22,13 +64,19 @@
         <div class="overlay"></div>
         <div class="container">
           <div class="row slider-text justify-content-center align-items-center">
-            <div class="col-md-8 col-sm-12 text-center ftco-animate">
+            <div class="col-md-8 col-sm-12 text-center">
               <span class="subheading">Descubre</span>
               <h1 class="mb-4">Sabor y Calidad en Cada Taza</h1>
               <p class="mb-4">Gestiona tus productos, clientes y ventas de manera eficiente.</p>
               <p>
-                <RouterLink to="/ventas" class="btn btn-primary p-3 px-xl-4 py-xl-3">Nueva Venta</RouterLink>
-                <RouterLink to="/clientes" class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3 ml-2">Ver Clientes</RouterLink>
+                <RouterLink to="/ventas" class="btn btn-primary p-3 px-xl-4 py-xl-3"
+                  >Nueva Venta</RouterLink
+                >
+                <RouterLink
+                  to="/clientes"
+                  class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3 ml-2"
+                  >Ver Clientes</RouterLink
+                >
               </p>
             </div>
           </div>
@@ -39,13 +87,19 @@
         <div class="overlay"></div>
         <div class="container">
           <div class="row slider-text justify-content-center align-items-center">
-            <div class="col-md-8 col-sm-12 text-center ftco-animate">
+            <div class="col-md-8 col-sm-12 text-center">
               <span class="subheading">Gestiona</span>
               <h1 class="mb-4">Control Total de tu Cafetería</h1>
               <p class="mb-4">Registra ventas, administra productos y más.</p>
               <p>
-                <RouterLink to="/categorias" class="btn btn-primary p-3 px-xl-4 py-xl-3">Ver Categorías</RouterLink>
-                <RouterLink to="/productos" class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3 ml-2">Ver Productos</RouterLink>
+                <RouterLink to="/categorias" class="btn btn-primary p-3 px-xl-4 py-xl-3"
+                  >Ver Categorías</RouterLink
+                >
+                <RouterLink
+                  to="/productos"
+                  class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3 ml-2"
+                  >Ver Productos</RouterLink
+                >
               </p>
             </div>
           </div>
@@ -81,6 +135,14 @@
               </div>
             </div>
           </div>
+          <div class="book p-4">
+            <h3>Registrar Venta</h3>
+            <p class="text-white">Accede al sistema para registrar ventas rápidamente.</p>
+            <RouterLink to="/ventas" class="btn btn-primary py-3 px-4 mt-3">Nueva Venta</RouterLink>
+            <RouterLink to="/productos" class="btn btn-white btn-outline-white py-3 px-4 mt-3 ml-2"
+              >Ver Productos</RouterLink
+            >
+          </div>
         </div>
       </div>
     </section>
@@ -102,7 +164,9 @@
               <div class="media-body">
                 <h3 class="heading">Categorías</h3>
                 <p>Gestiona las categorías de productos de la cafetería.</p>
-                <RouterLink to="/categorias" class="btn btn-primary btn-sm mt-2">Gestionar</RouterLink>
+                <RouterLink to="/categorias" class="btn btn-primary btn-sm mt-2"
+                  >Gestionar</RouterLink
+                >
               </div>
             </div>
           </div>
@@ -114,7 +178,9 @@
               <div class="media-body">
                 <h3 class="heading">Productos</h3>
                 <p>Administra el catálogo de productos y precios.</p>
-                <RouterLink to="/productos" class="btn btn-primary btn-sm mt-2">Gestionar</RouterLink>
+                <RouterLink to="/productos" class="btn btn-primary btn-sm mt-2"
+                  >Gestionar</RouterLink
+                >
               </div>
             </div>
           </div>
@@ -126,7 +192,9 @@
               <div class="media-body">
                 <h3 class="heading">Clientes</h3>
                 <p>Gestiona los clientes registrados en el sistema.</p>
-                <RouterLink to="/clientes" class="btn btn-primary btn-sm mt-2">Gestionar</RouterLink>
+                <RouterLink to="/clientes" class="btn btn-primary btn-sm mt-2"
+                  >Gestionar</RouterLink
+                >
               </div>
             </div>
           </div>
@@ -153,8 +221,13 @@
             <div class="heading-section text-md-right ftco-animate">
               <span class="subheading">Descubre</span>
               <h2 class="mb-4">Nuestro Menú</h2>
-              <p class="mb-4">Ofrecemos una variedad de bebidas calientes, postres y platos del día preparados con los mejores ingredientes.</p>
-              <RouterLink to="/productos" class="btn btn-primary btn-outline-primary px-4 py-3">Ver Productos</RouterLink>
+              <p class="mb-4">
+                Ofrecemos una variedad de bebidas calientes, postres y platos del día preparados con
+                los mejores ingredientes.
+              </p>
+              <RouterLink to="/productos" class="btn btn-primary btn-outline-primary px-4 py-3"
+                >Ver Productos</RouterLink
+              >
             </div>
           </div>
           <div class="col-md-6">
@@ -191,7 +264,9 @@
         <div class="row justify-content-center">
           <div class="col-md-10">
             <div class="row">
-              <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+              <div
+                class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate"
+              >
                 <div class="block-18 text-center">
                   <div class="text">
                     <div class="icon"><span class="flaticon-coffee-cup"></span></div>
@@ -200,7 +275,9 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+              <div
+                class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate"
+              >
                 <div class="block-18 text-center">
                   <div class="text">
                     <div class="icon"><span class="flaticon-coffee-cup"></span></div>
@@ -209,7 +286,9 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+              <div
+                class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate"
+              >
                 <div class="block-18 text-center">
                   <div class="text">
                     <div class="icon"><span class="flaticon-coffee-cup"></span></div>
@@ -218,7 +297,9 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+              <div
+                class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate"
+              >
                 <div class="block-18 text-center">
                   <div class="text">
                     <div class="icon"><span class="flaticon-coffee-cup"></span></div>
@@ -234,37 +315,3 @@
     </section>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onMounted } from 'vue'
-import bg1 from '@/assets/images/bg_1.jpg'
-import bg2 from '@/assets/images/bg_2.jpg'
-import bg3 from '@/assets/images/bg_3.jpg'
-import menu1 from '@/assets/images/menu-1.jpg'
-import menu2 from '@/assets/images/menu-2.jpg'
-import menu3 from '@/assets/images/menu-3.jpg'
-import menu4 from '@/assets/images/menu-4.jpg'
-
-onMounted(() => {
-  setTimeout(() => {
-    const $ = (window as any).$
-    if ($ && $.fn.owlCarousel) {
-      $('.home-slider').owlCarousel({
-        loop: true,
-        autoplay: true,
-        margin: 0,
-        animateOut: 'fadeOut',
-        nav: false,
-        autoplayHoverPause: false,
-        items: 1,
-        navText: ['', ''],
-        responsive: {
-          0: { items: 1 },
-          600: { items: 1 },
-          1000: { items: 1 }
-        }
-      })
-    }
-  }, 500)
-})
-</script>
