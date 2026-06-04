@@ -67,7 +67,7 @@ onMounted(async () => {
           <div class="row slider-text justify-content-center align-items-center">
             <div class="col-md-8 col-sm-12 text-center">
               <span class="subheading">Bienvenido</span>
-              <h1 class="mb-4">☕ Cafetería El Buen Gusto</h1>
+              <h1 class="mb-4">Cafetería El Buen Gusto</h1>
               <p class="mb-4">
                 Sistema de gestión de ventas para la cafetería El Buen Gusto de Sucre, Bolivia.
               </p>
@@ -127,69 +127,6 @@ onMounted(async () => {
               </p>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- BARRA DE INFO -->
-    <section style="background: #1a1a1a; padding: 0">
-      <div style="display: flex; align-items: stretch">
-        <div style="flex: 1; padding: 30px">
-          <div class="row">
-            <div
-              class="col-md-4 d-flex align-items-center justify-content-center"
-              style="color: white; padding: 20px"
-            >
-              <span
-                class="icon-phone"
-                style="color: #c49b63; font-size: 30px; margin-right: 15px"
-              ></span>
-              <div>
-                <h3 style="color: white; font-size: 18px">+591 000 0000</h3>
-                <p style="color: rgba(255, 255, 255, 0.7)">
-                  Contáctenos para reservas y pedidos especiales.
-                </p>
-              </div>
-            </div>
-            <div
-              class="col-md-4 d-flex align-items-center justify-content-center"
-              style="color: white; padding: 20px"
-            >
-              <span
-                class="icon-my_location"
-                style="color: #c49b63; font-size: 30px; margin-right: 15px"
-              ></span>
-              <div>
-                <h3 style="color: white; font-size: 18px">Sucre, Bolivia</h3>
-                <p style="color: rgba(255, 255, 255, 0.7)">
-                  Visítenos en nuestra cafetería en el centro de Sucre.
-                </p>
-              </div>
-            </div>
-            <div
-              class="col-md-4 d-flex align-items-center justify-content-center"
-              style="color: white; padding: 20px"
-            >
-              <span
-                class="icon-clock-o"
-                style="color: #c49b63; font-size: 30px; margin-right: 15px"
-              ></span>
-              <div>
-                <h3 style="color: white; font-size: 18px">Lunes a Sábado</h3>
-                <p style="color: rgba(255, 255, 255, 0.7)">7:00am - 8:00pm</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="background: #c49b63; padding: 30px; min-width: 350px">
-          <h3 style="color: white">Registrar Venta</h3>
-          <p style="color: white">Accede al sistema para registrar ventas rápidamente.</p>
-          <RouterLink to="/ventas" class="btn btn-white btn-outline-white py-3 px-4 mt-3"
-            >Nueva Venta</RouterLink
-          >
-          <RouterLink to="/productos" class="btn btn-white btn-outline-white py-3 px-4 mt-3 ml-2"
-            >Ver Productos</RouterLink
-          >
         </div>
       </div>
     </section>

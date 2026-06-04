@@ -5,22 +5,12 @@
       <div class="row mb-5">
         <div class="col-lg-3 col-md-6 mb-5 mb-md-5">
           <div class="ftco-footer-widget mb-4">
-            <h2 class="ftco-heading-2">☕ El Buen Gusto</h2>
+            <img src="/src/assets/images/logo.png" alt="El Buen Gusto" style="height: 60px; margin-bottom: 15px;" />
+            <h2 class="ftco-heading-2">El Buen Gusto</h2>
             <p>
               Sistema de gestión para la cafetería El Buen Gusto. Administra productos, clientes y
               ventas de manera eficiente.
             </p>
-            <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
-              <li>
-                <a href="#"><span class="icon-twitter"></span></a>
-              </li>
-              <li>
-                <a href="#"><span class="icon-facebook"></span></a>
-              </li>
-              <li>
-                <a href="#"><span class="icon-instagram"></span></a>
-              </li>
-            </ul>
           </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-5 mb-md-5">
@@ -37,18 +27,7 @@
         </div>
         <div class="col-lg-3 col-md-6 mb-5 mb-md-5">
           <div class="ftco-footer-widget mb-4">
-            <h2 class="ftco-heading-2">Servicios</h2>
-            <ul class="list-unstyled">
-              <li><a href="#" class="py-2 d-block">Bebidas Calientes</a></li>
-              <li><a href="#" class="py-2 d-block">Postres</a></li>
-              <li><a href="#" class="py-2 d-block">Platos del Día</a></li>
-              <li><a href="#" class="py-2 d-block">Delivery</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-5 mb-md-5">
-          <div class="ftco-footer-widget mb-4">
-            <h2 class="ftco-heading-2">Contáctenos</h2>
+            <h2 class="ftco-heading-2">Nuestra Información</h2>
             <div class="block-23 mb-3">
               <ul>
                 <li>
@@ -56,7 +35,8 @@
                 </li>
                 <li>
                   <a href="#"
-                    ><span class="icon icon-phone"></span><span class="text">+591 000 0000</span></a
+                    ><span class="icon icon-phone"></span><span class="text">+591 60300843</span>
+                    <span class="icon icon-phone"></span><span class="text">+591 74401433</span></a
                   >
                 </li>
                 <li>

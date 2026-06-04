@@ -22,7 +22,6 @@ async function handleLogin() {
 </script>
 
 <template>
-<<<<<<< Updated upstream
   <div style="min-height: 100vh; background-image: url('/src/assets/images/bg_1.jpg'); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center;">
     <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6);"></div>
     <div style="position: relative; z-index: 10; width: 100%; max-width: 450px; padding: 20px;">
@@ -73,42 +72,6 @@ async function handleLogin() {
         </button>
 
       </div>
-=======
-  <div class="login-container">
-    <div class="login-box">
-      <div class="login-header">
-        <span class="subheading">Bienvenido a</span>
-        <h2>El Buen Gusto</h2>
-        <div class="coffee-icon">☕</div>
-      </div>
-
-      <div class="gold-divider"></div>
-
-      <div class="login-body">
-        <h4 class="login-title">Iniciar Sesión</h4>
-
-        <div class="form-group mb-4">
-          <label class="field-label">Email</label>
-          <input
-            v-model="email"
-            type="email"
-            class="form-control"
-            placeholder="correo@ejemplo.com"
-          />
-        </div>
-
-        <div class="form-group mb-4">
-          <label class="field-label">Contraseña</label>
-          <input v-model="password" type="password" class="form-control" placeholder="••••••" />
-        </div>
-
-        <div v-if="error" class="error-msg mb-4">
-          {{ error }}
-        </div>
-
-        <button class="btn-login" @click="handleLogin">Ingresar</button>
-      </div>
->>>>>>> Stashed changes
     </div>
   </div>
 </template>

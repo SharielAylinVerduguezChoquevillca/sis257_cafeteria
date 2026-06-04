@@ -9312,3 +9312,7 @@ textarea.form-control {
 .ftco-intro .book h3 {
   color: #fff;
 }
+
+body {
+  background-color: #090909 !important;
+}

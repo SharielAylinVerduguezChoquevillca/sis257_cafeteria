@@ -17,7 +17,10 @@ function handleLogout() {
     id="ftco-navbar"
   >
     <div class="container">
-      <a class="navbar-brand" href="#">☕ El Buen<small>Gusto</small></a>
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="/src/assets/images/logo.png" alt="El Buen Gusto" style="height: 40px; margin-right: 10px;" />
+        <span>El Buen<small>Gusto</small></span>
+      </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav">
         <span class="oi oi-menu"></span> Menu
       </button>
