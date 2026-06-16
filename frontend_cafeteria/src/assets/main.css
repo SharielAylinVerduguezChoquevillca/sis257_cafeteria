@@ -5,10 +5,8 @@
   max-width: 100%;
   margin: 0;
   padding: 0;
-  font-weight: normal;
 }
 
-a {
-  text-decoration: none;
-  transition: 0.4s;
+.absolute.w-full {
+  display: none !important;
 }

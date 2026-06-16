@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import axios from '../plugins/axios'
-import bg1 from '@/assets/images/bg_1.jpg'
-import bg2 from '@/assets/images/bg_2.jpg'
-import bg3 from '@/assets/images/bg_3.jpg'
+import { useAuthStore } from '../stores/auth'
+
+const authStore = useAuthStore()
 
 const totalProductos = ref(0)
 const totalClientes = ref(0)
@@ -43,117 +43,274 @@ onMounted(async () => {
   } catch (e) {
     console.error(e)
   }
-
-  setTimeout(() => {
-    const $ = (window as any).$
-    if (!$) return
-    const slider = $('.home-slider')
-    if (!slider.length) return
-    if (slider.hasClass('owl-loaded')) {
-      slider.owlCarousel('destroy')
-    }
-    slider.owlCarousel({
-      loop: false,
-      autoplay: true,
-      autoplayTimeout: 5000,
-      margin: 0,
-      nav: false,
-      items: 1,
-      dots: true,
-    })
-  }, 500)
 })
 </script>
 
 <template>
-  <div>
-    <!-- SLIDER -->
-    <section class="home-slider owl-carousel">
-      <div class="slider-item" :style="{ backgroundImage: `url(${bg1})` }">
-        <div class="overlay"></div>
-        <div class="container">
-          <div class="row slider-text justify-content-center align-items-center">
-            <div class="col-md-8 col-sm-12 text-center">
-              <span class="subheading">Bienvenido</span>
-              <h1 class="mb-4">Cafetería El Buen Gusto</h1>
-              <p class="mb-4">Sistema de gestión de ventas para la cafetería El Buen Gusto de Sucre, Bolivia.</p>
-              <p>
-                <RouterLink to="/ventas" class="btn btn-primary p-3 px-xl-4 py-xl-3">Nueva Venta</RouterLink>
-                <RouterLink to="/productos" class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3 ml-2">Ver Productos</RouterLink>
+  <div class="w-full px-6 py-6 mx-auto">
+    <!-- Bienvenida -->
+    <div class="flex flex-wrap -mx-3 mb-6">
+      <div class="w-full px-3">
+        <div
+          class="relative flex flex-col min-w-0 break-words bg-white shadow-xl rounded-2xl bg-clip-border p-6"
+        >
+          <div class="flex items-center">
+            <div>
+              <h5 class="mb-0 font-bold dark:text-white">
+                Bienvenido, {{ authStore.usuario?.nombre }} ☕
+              </h5>
+              <p class="mb-0 text-sm text-slate-500">
+                Panel de Administración — Cafetería El Buen Gusto
               </p>
             </div>
           </div>
         </div>
       </div>
-      <div class="slider-item" :style="{ backgroundImage: `url(${bg2})` }">
-        <div class="overlay"></div>
-        <div class="container">
-          <div class="row slider-text justify-content-center align-items-center">
-            <div class="col-md-8 col-sm-12 text-center">
-              <span class="subheading">Descubre</span>
-              <h1 class="mb-4">Sabor y Calidad en Cada Taza</h1>
-              <p class="mb-4">Gestiona tus productos, clientes y ventas de manera eficiente.</p>
-              <p>
-                <RouterLink to="/ventas" class="btn btn-primary p-3 px-xl-4 py-xl-3">Nueva Venta</RouterLink>
-                <RouterLink to="/clientes" class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3 ml-2">Ver Clientes</RouterLink>
-              </p>
-            </div>
+    </div>
+    <!-- Cards estadísticas -->
+    <!-- Cards estadísticas -->
+    <div
+      style="
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+      "
+    >
+      <!-- Categorías -->
+      <div
+        style="
+          background: white;
+          border-radius: 1rem;
+          box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+          padding: 1rem;
+        "
+      >
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <div>
+            <p
+              style="
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: #8392ab;
+                margin-bottom: 4px;
+              "
+            >
+              Categorías
+            </p>
+            <h5 style="font-size: 1.5rem; font-weight: 700; margin: 0">{{ totalCategorias }}</h5>
+            <p style="font-size: 12px; color: #8392ab; margin: 0">Total registradas</p>
           </div>
+          <RouterLink
+            to="/categorias"
+            style="
+              width: 48px;
+              height: 48px;
+              border-radius: 50%;
+              background: linear-gradient(310deg, #f5365c, #f56036);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <i class="ni ni-bullet-list-67" style="color: white; font-size: 18px"></i>
+          </RouterLink>
         </div>
       </div>
-      <div class="slider-item" :style="{ backgroundImage: `url(${bg3})` }">
-        <div class="overlay"></div>
-        <div class="container">
-          <div class="row slider-text justify-content-center align-items-center">
-            <div class="col-md-8 col-sm-12 text-center">
-              <span class="subheading">Gestiona</span>
-              <h1 class="mb-4">Control Total de tu Cafetería</h1>
-              <p class="mb-4">Registra ventas, administra productos y más.</p>
-              <p>
-                <RouterLink to="/categorias" class="btn btn-primary p-3 px-xl-4 py-xl-3">Ver Categorías</RouterLink>
-                <RouterLink to="/productos" class="btn btn-white btn-outline-white p-3 px-xl-4 py-xl-3 ml-2">Ver Productos</RouterLink>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- ÚLTIMAS VENTAS -->
-    <section class="ftco-counter ftco-bg-dark img" :style="{ backgroundImage: `url(${bg1})` }">
-      <div class="overlay"></div>
-      <div class="container" style="position: relative; z-index: 5">
-        <div class="row justify-content-center mb-4">
-          <div class="col-md-7 text-center">
-            <h2 style="color: white; font-family: 'Josefin Sans', sans-serif; letter-spacing: 2px">ÚLTIMAS VENTAS</h2>
-            <div style="width: 60px; height: 2px; background: #c49b63; margin: 10px auto"></div>
+      <!-- Productos -->
+      <div
+        style="
+          background: white;
+          border-radius: 1rem;
+          box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+          padding: 1rem;
+        "
+      >
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <div>
+            <p
+              style="
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: #8392ab;
+                margin-bottom: 4px;
+              "
+            >
+              Productos
+            </p>
+            <h5 style="font-size: 1.5rem; font-weight: 700; margin: 0">{{ totalProductos }}</h5>
+            <p style="font-size: 12px; color: #8392ab; margin: 0">En catálogo</p>
           </div>
+          <RouterLink
+            to="/productos"
+            style="
+              width: 48px;
+              height: 48px;
+              border-radius: 50%;
+              background: linear-gradient(310deg, #7928ca, #ff0080);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <i class="ni ni-box-2" style="color: white; font-size: 18px"></i>
+          </RouterLink>
         </div>
-        <div class="row justify-content-center">
-          <div class="col-md-10">
-            <div style="background: rgba(255,255,255,0.1); border: 1px solid rgba(196,155,99,0.3); border-radius: 12px; padding: 25px; backdrop-filter: blur(5px);">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h4 style="color: white; margin: 0; font-family: 'Josefin Sans', sans-serif; letter-spacing: 1px;"></h4>
-                <RouterLink to="/ventas" style="background: #c49b63; color: white; padding: 6px 15px; border-radius: 20px; text-decoration: none; font-size: 13px;">Ver todas</RouterLink>
-              </div>
-              <table style="width: 100%; border-collapse: collapse">
+      </div>
+
+      <!-- Clientes -->
+      <div
+        style="
+          background: white;
+          border-radius: 1rem;
+          box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+          padding: 1rem;
+        "
+      >
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <div>
+            <p
+              style="
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: #8392ab;
+                margin-bottom: 4px;
+              "
+            >
+              Clientes
+            </p>
+            <h5 style="font-size: 1.5rem; font-weight: 700; margin: 0">{{ totalClientes }}</h5>
+            <p style="font-size: 12px; color: #8392ab; margin: 0">Registrados</p>
+          </div>
+          <RouterLink
+            to="/clientes"
+            style="
+              width: 48px;
+              height: 48px;
+              border-radius: 50%;
+              background: linear-gradient(310deg, #17ad37, #98ec2d);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <i class="ni ni-single-02" style="color: white; font-size: 18px"></i>
+          </RouterLink>
+        </div>
+      </div>
+
+      <!-- Ventas -->
+      <div
+        style="
+          background: white;
+          border-radius: 1rem;
+          box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+          padding: 1rem;
+        "
+      >
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <div>
+            <p
+              style="
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: #8392ab;
+                margin-bottom: 4px;
+              "
+            >
+              Ventas
+            </p>
+            <h5 style="font-size: 1.5rem; font-weight: 700; margin: 0">{{ totalVentas }}</h5>
+            <p style="font-size: 12px; color: #2dce89; font-weight: 600; margin: 0">
+              Bs. {{ totalRecaudado.toFixed(2) }} recaudado
+            </p>
+          </div>
+          <RouterLink
+            to="/ventas"
+            style="
+              width: 48px;
+              height: 48px;
+              border-radius: 50%;
+              background: linear-gradient(310deg, #f5365c, #f56036);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <i class="ni ni-cart" style="color: white; font-size: 18px"></i>
+          </RouterLink>
+        </div>
+      </div>
+    </div>
+
+    <!-- Últimas ventas y Top productos -->
+    <div class="flex flex-wrap -mx-3">
+      <!-- Últimas ventas -->
+      <div class="w-full max-w-full px-3 lg:w-7/12 mb-6">
+        <div
+          class="relative flex flex-col min-w-0 break-words bg-white shadow-xl rounded-2xl bg-clip-border"
+        >
+          <div class="p-4 pb-0 mb-0 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+              <h6 class="mb-0 font-bold">🛒 Últimas Ventas</h6>
+              <RouterLink to="/ventas" class="text-sm text-blue-500 font-semibold"
+                >Ver todas →</RouterLink
+              >
+            </div>
+          </div>
+          <div class="flex-auto p-4">
+            <div class="overflow-x-auto">
+              <table class="w-full mb-0 align-top border-collapse">
                 <thead>
-                  <tr style="border-bottom: 1px solid rgba(196,155,99,0.5)">
-                    <th style="padding: 10px; text-align: left; color: #c49b63; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">#</th>
-                    <th style="padding: 10px; text-align: left; color: #c49b63; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Cliente</th>
-                    <th style="padding: 10px; text-align: left; color: #c49b63; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Fecha</th>
-                    <th style="padding: 10px; text-align: right; color: #c49b63; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Total</th>
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500 border-b"
+                    >
+                      #
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500 border-b"
+                    >
+                      Cliente
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500 border-b"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="px-4 py-3 text-right text-xs font-semibold uppercase text-slate-500 border-b"
+                    >
+                      Total
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="venta in ultimasVentas" :key="venta.id" style="border-bottom: 1px solid rgba(255,255,255,0.1)">
-                    <td style="padding: 12px 10px; color: rgba(255,255,255,0.5); font-size: 13px">{{ venta.id }}</td>
-                    <td style="padding: 12px 10px; color: white; font-size: 13px">{{ venta.cliente?.nombre || 'Sin cliente' }}</td>
-                    <td style="padding: 12px 10px; color: rgba(255,255,255,0.7); font-size: 13px">{{ new Date(venta.fecha).toLocaleDateString() }}</td>
-                    <td style="padding: 12px 10px; color: #c49b63; font-weight: bold; font-size: 14px; text-align: right">Bs. {{ venta.total }}</td>
+                  <tr
+                    v-for="venta in ultimasVentas"
+                    :key="venta.id"
+                    class="border-b border-gray-100"
+                  >
+                    <td class="px-4 py-3 text-sm text-slate-400">{{ venta.id }}</td>
+                    <td class="px-4 py-3 text-sm font-semibold text-slate-700">
+                      {{ venta.cliente?.nombre || 'Sin cliente' }}
+                    </td>
+                    <td class="px-4 py-3 text-sm text-slate-500">
+                      {{ new Date(venta.fecha).toLocaleDateString() }}
+                    </td>
+                    <td class="px-4 py-3 text-sm font-bold text-emerald-500 text-right">
+                      Bs. {{ venta.total }}
+                    </td>
                   </tr>
                   <tr v-if="ultimasVentas.length === 0">
-                    <td colspan="4" style="padding: 20px; text-align: center; color: rgba(255,255,255,0.5); font-size: 13px">No hay ventas registradas aún</td>
+                    <td colspan="4" class="px-4 py-6 text-center text-sm text-slate-400">
+                      No hay ventas registradas
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -161,119 +318,69 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- TOP PRODUCTOS -->
-    <section style="background: #4a2c2a; padding: 60px 0">
-      <div class="container">
-        <div class="row justify-content-center mb-5">
-          <div class="col-md-7 text-center">
-            <span style="font-family: 'Great Vibes', cursive; color: #c49b63; font-size: 2rem">Destacados</span>
-            <h2 style="color: white; font-family: 'Josefin Sans', sans-serif; letter-spacing: 2px; text-transform: uppercase;">Top Productos</h2>
-            <div style="width: 60px; height: 2px; background: #c49b63; margin: 15px auto"></div>
-            <p style="color: rgba(255,255,255,0.7)">Los productos más vendidos de nuestra cafetería.</p>
+      <!-- Top productos -->
+      <div class="w-full max-w-full px-3 lg:w-5/12 mb-6">
+        <div
+          class="relative flex flex-col min-w-0 break-words bg-white shadow-xl rounded-2xl bg-clip-border"
+        >
+          <div class="p-4 pb-0 mb-0 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+              <h6 class="mb-0 font-bold">☕ Top Productos</h6>
+              <RouterLink to="/productos" class="text-sm text-blue-500 font-semibold"
+                >Ver todos →</RouterLink
+              >
+            </div>
           </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-md-8">
-            <div v-for="(producto, index) in topProductos" :key="producto.id"
-              style="display: flex; align-items: center; padding: 20px 25px; margin-bottom: 15px; background: rgba(255,255,255,0.08); border: 1px solid rgba(196,155,99,0.3); border-radius: 12px;">
-              <div style="width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; margin-right: 20px; font-size: 20px; flex-shrink: 0; border: 2px solid #c49b63;"
-                :style="{ background: index === 0 ? '#c49b63' : index === 1 ? 'rgba(196,155,99,0.3)' : 'rgba(255,255,255,0.1)' }">
-                {{ index + 1 }}
-              </div>
-              <div style="flex: 1">
-                <h5 style="margin: 0; color: white; font-weight: bold; font-size: 16px">{{ producto.nombre }}</h5>
-                <p style="margin: 0; color: rgba(255,255,255,0.5); font-size: 13px">
-                  {{ producto.categoria?.nombre }} · {{ (producto as any).vendidos }} vendidos
-                </p>
-              </div>
-              <div style="text-align: right">
-                <p style="margin: 0; font-weight: bold; color: #c49b63; font-size: 1.5rem">Bs. {{ producto.precio }}</p>
-                <span style="background: rgba(196,155,99,0.2); color: #c49b63; padding: 3px 10px; border-radius: 20px; font-size: 11px; border: 1px solid rgba(196,155,99,0.4);">
-                  Stock: {{ producto.stock }}
-                </span>
-              </div>
-            </div>
-            <div v-if="topProductos.length === 0" style="text-align: center; padding: 30px; color: rgba(255,255,255,0.5)">
-              No hay productos registrados
-            </div>
+          <div class="flex-auto p-4">
+            <ul class="flex flex-col pl-0 mb-0">
+              <li
+                v-for="(producto, index) in topProductos"
+                :key="producto.id"
+                class="relative flex justify-between py-3 border-b border-gray-100"
+              >
+                <div class="flex items-center">
+                  <div
+                    class="inline-block w-8 h-8 mr-4 text-center text-white shadow-sm rounded-xl flex items-center justify-center font-bold"
+                    :class="
+                      index === 0
+                        ? 'bg-gradient-to-tl from-orange-500 to-yellow-500'
+                        : index === 1
+                          ? 'bg-gradient-to-tl from-blue-500 to-violet-500'
+                          : 'bg-gradient-to-tl from-slate-600 to-slate-300'
+                    "
+                  >
+                    {{ index + 1 }}
+                  </div>
+                  <div class="flex flex-col">
+                    <h6 class="mb-0 text-sm font-semibold text-slate-700">{{ producto.nombre }}</h6>
+                    <span class="text-xs text-slate-400"
+                      >{{ producto.categoria?.nombre }} ·
+                      {{ (producto as any).vendidos }} vendidos</span
+                    >
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="text-sm font-bold text-emerald-500">Bs. {{ producto.precio }}</span>
+                  <br />
+                  <span class="text-xs text-slate-400">Stock: {{ producto.stock }}</span>
+                </div>
+              </li>
+              <li v-if="topProductos.length === 0" class="py-4 text-center text-sm text-slate-400">
+                No hay productos registrados
+              </li>
+            </ul>
             <div class="text-center mt-4">
-              <RouterLink to="/productos" style="background: #c49b63; color: white; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-size: 14px; letter-spacing: 1px; text-transform: uppercase;">
-                Ver todos los productos
+              <RouterLink
+                to="/ventas"
+                class="inline-block px-6 py-2 text-sm font-bold text-white rounded-lg bg-gradient-to-tl from-red-600 to-orange-600"
+              >
+                + Nueva Venta
               </RouterLink>
             </div>
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- PANEL DE CONTROL -->
-    <section class="ftco-counter ftco-bg-dark img" :style="{ backgroundImage: `url(${bg2})` }" style="padding: 40px 0">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="row justify-content-center mb-4">
-          <div class="col-md-7 text-center">
-            <h2 style="color: white; font-family: 'Josefin Sans', sans-serif; letter-spacing: 2px">PANEL DE CONTROL</h2>
-            <div style="width: 60px; height: 2px; background: #c49b63; margin: 10px auto"></div>
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-md-10">
-            <div class="row">
-              <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap">
-                <div class="block-18 text-center">
-                  <div class="text">
-                    <div class="icon"><span class="flaticon-coffee-bean"></span></div>
-                    <strong class="number">{{ totalCategorias }}</strong>
-                    <span>Categorías</span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap">
-                <div class="block-18 text-center">
-                  <div class="text">
-                    <div class="icon"><span class="flaticon-choices"></span></div>
-                    <strong class="number">{{ totalProductos }}</strong>
-                    <span>Productos</span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap">
-                <div class="block-18 text-center">
-                  <div class="text">
-                    <div class="icon"><span class="flaticon-delivery-truck"></span></div>
-                    <strong class="number">{{ totalClientes }}</strong>
-                    <span>Clientes</span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap">
-                <div class="block-18 text-center">
-                  <div class="text">
-                    <div class="icon"><span class="flaticon-coffee-cup"></span></div>
-                    <strong class="number">{{ totalVentas }}</strong>
-                    <span>Ventas</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- TOTAL RECAUDADO -->
-            <div class="row justify-content-center mt-4">
-              <div class="col-md-6 col-lg-4 d-flex justify-content-center counter-wrap">
-                <div class="block-18 text-center">
-                  <div class="text">
-                    <div class="icon"><span class="flaticon-coffee-cup"></span></div>
-                    <strong class="number" style="font-size: 1.5rem;">Bs. {{ totalRecaudado.toFixed(2) }}</strong>
-                    <span>Total Recaudado</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
+    </div>
   </div>
 </template>

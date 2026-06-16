@@ -7,12 +7,14 @@ const authStore = useAuthStore()
 </script>
 
 <template>
-  <div style="width: 100%; overflow-x: hidden;">
+  <div>
     <MainHeader v-if="authStore.isAuthenticated()" />
-    <RouterView />
-    <MainFooter v-if="authStore.isAuthenticated()" />
+    <main v-if="authStore.isAuthenticated()" class="relative h-full max-h-screen transition-all duration-200 ease-in-out xl:ml-68 rounded-xl">
+      <div class="min-h-screen bg-gray-50">
+        <RouterView />
+        <MainFooter />
+      </div>
+    </main>
+    <RouterView v-else />
   </div>
 </template>
-
-<style scoped>
-</style>
