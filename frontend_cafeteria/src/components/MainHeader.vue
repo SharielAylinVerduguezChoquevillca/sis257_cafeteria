@@ -12,7 +12,6 @@ function handleLogout() {
 </script>
 
 <template>
-  <!-- Sidebar -->
   <aside class="sidebar-nav fixed inset-y-0 flex flex-col items-start justify-start w-full p-0 my-4 overflow-hidden antialiased transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl dark:shadow-none dark:bg-slate-850 max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0" aria-expanded="false">
     <div class="w-full h-19">
       <i class="absolute top-0 right-0 p-4 opacity-50 cursor-pointer fas fa-times dark:text-white text-slate-400 xl:hidden" sidenav-close></i>
@@ -32,7 +31,7 @@ function handleLogout() {
           </RouterLink>
         </li>
 
-        <li class="mt-0.5 w-full">
+        <li class="mt-0.5 w-full" v-if="authStore.esAdmin()">
           <RouterLink to="/categorias" class="py-2 dark:text-white dark:opacity-80 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-1 transition-colors hover:bg-gray-100">
             <i class="mr-2 w-5 text-center text-base leading-normal text-orange-500 ni ni-bullet-list-67"></i>
             <span class="duration-300 opacity-100 pointer-events-none ease">Categorías</span>
@@ -67,8 +66,19 @@ function handleLogout() {
         <li class="mt-0.5 w-full" v-if="authStore.isAuthenticated()">
           <a class="py-2 dark:text-white dark:opacity-80 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-1 transition-colors">
             <i class="mr-2 w-5 text-center text-base leading-normal text-slate-700 ni ni-single-02"></i>
-            <span class="duration-300 opacity-100 pointer-events-none ease text-slate-700 font-semibold">{{ authStore.usuario?.nombre }}</span>
+            <span class="duration-300 opacity-100 pointer-events-none ease text-slate-700 font-semibold">
+              {{ authStore.usuario?.nombre }}
+            </span>
           </a>
+        </li>
+
+        <li class="w-full" v-if="authStore.isAuthenticated()">
+          <span
+            class="ml-9 inline-block px-2 py-0.5 text-xs font-semibold rounded-full"
+            :class="authStore.esAdmin() ? 'bg-blue-100 text-blue-600' : 'bg-emerald-100 text-emerald-600'"
+          >
+            {{ authStore.esAdmin() ? 'Administrador' : 'Cajero' }}
+          </span>
         </li>
 
         <li class="mt-0.5 w-full" v-if="authStore.isAuthenticated()">

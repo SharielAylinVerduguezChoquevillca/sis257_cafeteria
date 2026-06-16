@@ -27,5 +27,13 @@ export const useAuthStore = defineStore('auth', () => {
     return !!token.value
   }
 
-  return { token, usuario, login, logout, isAuthenticated }
+  function esAdmin() {
+    return usuario.value?.rol === 'admin'
+  }
+
+  function esCajero() {
+    return usuario.value?.rol === 'cajero'
+  }
+
+  return { token, usuario, login, logout, isAuthenticated, esAdmin, esCajero }
 })

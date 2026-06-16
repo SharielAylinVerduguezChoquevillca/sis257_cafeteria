@@ -2,7 +2,9 @@
 import { ref, onMounted, computed } from 'vue'
 import axios from '../../plugins/axios'
 import type { Categoria } from '../../models/categoria'
+import { useAuthStore } from '../../stores/auth'
 
+const authStore = useAuthStore()
 const categorias = ref<Categoria[]>([])
 const emit = defineEmits(['edit'])
 
@@ -19,6 +21,7 @@ async function eliminar(id: number) {
 }
 
 defineExpose({ obtenerLista })
+
 onMounted(() => {
   obtenerLista()
 })
@@ -47,26 +50,24 @@ const categoriasFiltradas = computed(() => {
           <th style="width: 60px">#</th>
           <th>Nombre</th>
           <th>Descripción</th>
-          <th style="width: 180px">Acciones</th>
+          <th v-if="authStore.esAdmin()" style="width: 180px">Acciones</th>
         </tr>
       </thead>
-
       <tbody>
         <tr v-if="categoriasFiltradas.length === 0">
-          <td colspan="4" class="text-center py-5">
+          <td :colspan="authStore.esAdmin() ? 4 : 3" class="text-center py-5">
             <span style="color: #c49b63; font-size: 14px; letter-spacing: 1px; text-transform: uppercase;">
               No hay categorías registradas
             </span>
           </td>
         </tr>
-
         <tr v-for="(categoria, index) in categoriasFiltradas" :key="categoria.id">
           <td>{{ index + 1 }}</td>
           <td class="product-name">
             <h3>{{ categoria.nombre }}</h3>
           </td>
           <td>{{ categoria.descripcion || '—' }}</td>
-          <td>
+          <td v-if="authStore.esAdmin()">
             <button class="btn btn-sm btn-warning mr-2" @click="emit('edit', categoria)">
               Editar
             </button>
@@ -83,12 +84,10 @@ const categoriasFiltradas = computed(() => {
   overflow-x: auto;
   border: 1px solid rgba(196, 155, 99, 0.2);
 }
-
 .table {
   min-width: 600px !important;
   background: transparent;
 }
-
 .table .thead-primary {
   background: #c49b63;
 }
@@ -102,7 +101,6 @@ const categoriasFiltradas = computed(() => {
   border: 1px solid transparent !important;
   font-weight: 600;
 }
-
 .table tbody tr td {
   color: #cccccc;
   background: transparent;
@@ -112,7 +110,6 @@ const categoriasFiltradas = computed(() => {
   vertical-align: middle;
   text-align: left !important;
 }
-
 .table tbody tr td.product-name h3 {
   font-size: 14px;
   text-transform: uppercase;
@@ -120,11 +117,9 @@ const categoriasFiltradas = computed(() => {
   color: #fff;
   margin: 0;
 }
-
 .table tbody tr:hover td {
   background: rgba(196, 155, 99, 0.05);
 }
-
 .btn-warning {
   background: transparent;
   border: 1px solid #c49b63;
@@ -140,7 +135,6 @@ const categoriasFiltradas = computed(() => {
   background: #c49b63;
   color: #000;
 }
-
 .btn-danger {
   background: transparent;
   border: 1px solid rgba(220, 53, 69, 0.6);

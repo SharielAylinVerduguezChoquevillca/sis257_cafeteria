@@ -24,10 +24,11 @@ export class AuthService {
     if (!passwordValido)
       throw new UnauthorizedException('Credenciales inválidas');
 
-    const payload = {
+   const payload = {
       sub: usuario.id,
       email: usuario.email,
       nombre: usuario.nombre,
+      rol: usuario.rol,          
     };
 
     return {
@@ -36,6 +37,7 @@ export class AuthService {
         id: usuario.id,
         nombre: usuario.nombre,
         email: usuario.email,
+        rol: usuario.rol,        
       },
     };
   }

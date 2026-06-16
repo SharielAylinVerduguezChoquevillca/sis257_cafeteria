@@ -2,7 +2,9 @@
 import { ref, onMounted, computed } from 'vue'
 import axios from '../../plugins/axios'
 import type { Producto } from '../../models/producto'
+import { useAuthStore } from '../../stores/auth'
 
+const authStore = useAuthStore()
 const productos = ref<Producto[]>([])
 const emit = defineEmits(['edit'])
 
@@ -52,13 +54,13 @@ const productosFiltrados = computed(() => {
           <th>Precio</th>
           <th>Stock</th>
           <th>Activo</th>
-          <th style="width: 180px">Acciones</th>
+          <th v-if="authStore.esAdmin()" style="width: 180px">Acciones</th>
         </tr>
       </thead>
 
       <tbody>
         <tr v-if="productosFiltrados.length === 0">
-          <td colspan="7" class="text-center py-5">
+          <td :colspan="authStore.esAdmin() ? 7 : 6" class="text-center py-5">
             <span style="color: #c49b63; font-size: 14px; letter-spacing: 1px; text-transform: uppercase;">
               No hay productos registrados
             </span>
@@ -80,7 +82,7 @@ const productosFiltrados = computed(() => {
               {{ producto.activo ? 'Sí' : 'No' }}
             </span>
           </td>
-          <td>
+          <td v-if="authStore.esAdmin()">
             <button class="btn btn-sm btn-warning mr-2" @click="emit('edit', producto)">
               Editar
             </button>

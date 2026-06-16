@@ -24,6 +24,9 @@ export class Usuario {
   @Column({ type: 'boolean', nullable: false, default: true })
   activo: boolean;
 
+  @Column({ type: 'varchar', length: 20, nullable: false, default: 'cajero' })
+  rol: string;
+  
   @CreateDateColumn({ name: 'fecha_creacion' })
   fechaCreacion: Date;
 

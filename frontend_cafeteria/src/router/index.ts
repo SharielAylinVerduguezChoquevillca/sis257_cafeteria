@@ -19,7 +19,7 @@ const router = createRouter({
       path: '/categorias',
       name: 'categorias',
       component: () => import('../views/CategoriaView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, soloAdmin: true },
     },
     {
       path: '/productos',
@@ -44,13 +44,21 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
+  const usuario = JSON.parse(localStorage.getItem('usuario') || 'null')
+
   if (to.meta.requiresAuth && !token) {
-    next('/login')
-  } else if (to.name === 'login' && token) {
-    next('/')
-  } else {
-    next()
+    return next('/login')
   }
+
+  if (to.name === 'login' && token) {
+    return next('/')
+  }
+
+  if (to.meta.soloAdmin && usuario?.rol !== 'admin') {
+    return next('/')
+  }
+
+  next()
 })
 
 export default router
