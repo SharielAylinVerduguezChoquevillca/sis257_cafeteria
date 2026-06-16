@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from '../../plugins/axios'
 import type { Cliente } from '../../models/cliente'
 
@@ -23,10 +23,26 @@ defineExpose({ obtenerLista })
 onMounted(() => {
   obtenerLista()
 })
+
+const busqueda = ref('')
+
+const clientesFiltrados = computed(() => {
+  if (!busqueda.value) return clientes.value
+  return clientes.value.filter(c =>
+    c.nombre.toLowerCase().includes(busqueda.value.toLowerCase()) ||
+    c.ci.toLowerCase().includes(busqueda.value.toLowerCase())
+  )
+})
 </script>
 
 <template>
   <div class="cart-list">
+    <input
+      v-model="busqueda"
+      class="form-control mb-3"
+      placeholder="Buscar cliente o CI..."
+      style="background: rgba(255,255,255,0.05); border: 1px solid rgba(196,155,99,0.3); color: white; border-radius: 8px; padding: 10px 15px;"
+    />
     <table class="table">
       <thead>
         <tr class="thead-primary">
@@ -39,22 +55,15 @@ onMounted(() => {
       </thead>
 
       <tbody>
-        <tr v-if="clientes.length === 0">
+        <tr v-if="clientesFiltrados.length === 0">
           <td colspan="5" class="text-center py-5">
-            <span
-              style="
-                color: #c49b63;
-                font-size: 14px;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-              "
-            >
+            <span style="color: #c49b63; font-size: 14px; letter-spacing: 1px; text-transform: uppercase;">
               No hay clientes registrados
             </span>
           </td>
         </tr>
 
-        <tr v-for="(cliente, index) in clientes" :key="cliente.id">
+        <tr v-for="(cliente, index) in clientesFiltrados" :key="cliente.id">
           <td>{{ index + 1 }}</td>
           <td class="product-name">
             <h3>{{ cliente.nombre }}</h3>

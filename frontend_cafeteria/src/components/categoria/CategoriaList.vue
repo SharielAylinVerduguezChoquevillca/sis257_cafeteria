@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from '../../plugins/axios'
 import type { Categoria } from '../../models/categoria'
 
@@ -22,10 +22,25 @@ defineExpose({ obtenerLista })
 onMounted(() => {
   obtenerLista()
 })
+
+const busqueda = ref('')
+
+const categoriasFiltradas = computed(() => {
+  if (!busqueda.value) return categorias.value
+  return categorias.value.filter(c =>
+    c.nombre.toLowerCase().includes(busqueda.value.toLowerCase())
+  )
+})
 </script>
 
 <template>
   <div class="cart-list">
+    <input
+      v-model="busqueda"
+      class="form-control mb-3"
+      placeholder="Buscar categoría..."
+      style="background: rgba(255,255,255,0.05); border: 1px solid rgba(196,155,99,0.3); color: white; border-radius: 8px; padding: 10px 15px;"
+    />
     <table class="table">
       <thead>
         <tr class="thead-primary">
@@ -37,22 +52,15 @@ onMounted(() => {
       </thead>
 
       <tbody>
-        <tr v-if="categorias.length === 0">
+        <tr v-if="categoriasFiltradas.length === 0">
           <td colspan="4" class="text-center py-5">
-            <span
-              style="
-                color: #c49b63;
-                font-size: 14px;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-              "
-            >
+            <span style="color: #c49b63; font-size: 14px; letter-spacing: 1px; text-transform: uppercase;">
               No hay categorías registradas
             </span>
           </td>
         </tr>
 
-        <tr v-for="(categoria, index) in categorias" :key="categoria.id">
+        <tr v-for="(categoria, index) in categoriasFiltradas" :key="categoria.id">
           <td>{{ index + 1 }}</td>
           <td class="product-name">
             <h3>{{ categoria.nombre }}</h3>

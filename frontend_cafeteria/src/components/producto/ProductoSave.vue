@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, nextTick } from 'vue'
 import axios from '@/plugins/axios'
 import type { Producto } from '../../models/producto'
 import type { Categoria } from '../../models/categoria'
@@ -24,21 +24,31 @@ const form = ref<Producto>({
   activo: true,
 })
 
+function setForm() {
+  if (props.producto) {
+    const idCat = Number(props.producto.idCategoria || props.producto.categoria?.id || 0)
+    console.log('producto:', props.producto)
+    console.log('idCategoria calculado:', idCat)
+    console.log('categorias disponibles:', categorias.value)
+    form.value = {
+      id: props.producto.id,
+      idCategoria: idCat,
+      nombre: props.producto.nombre,
+      descripcion: props.producto.descripcion || '',
+      precio: Number(props.producto.precio),
+      stock: Number(props.producto.stock),
+      activo: props.producto.activo ?? true,
+    }
+  }
+}
+
 watch(
-  () => props.producto,
-  (val) => {
+  () => props.mostrar,
+  async (val) => {
     if (val) {
-      form.value = { ...val }
-    } else {
-      form.value = {
-        id: 0,
-        idCategoria: 0,
-        nombre: '',
-        descripcion: '',
-        precio: 0,
-        stock: 0,
-        activo: true,
-      }
+      await obtenerCategorias()
+      await nextTick()
+      setForm()
     }
   },
 )
@@ -49,17 +59,25 @@ async function obtenerCategorias() {
 }
 
 async function guardar() {
+  const data = {
+    idCategoria: Number(form.value.idCategoria),
+    nombre: form.value.nombre,
+    descripcion: form.value.descripcion,
+    precio: Number(form.value.precio),
+    stock: Number(form.value.stock),
+    activo: form.value.activo,
+  }
   if (props.modoEdicion) {
-    await axios.patch(`/productos/${form.value.id}`, form.value)
+    await axios.patch(`/productos/${form.value.id}`, data)
   } else {
-    await axios.post('/productos', form.value)
+    await axios.post('/productos', data)
   }
   emit('guardar')
   emit('close')
 }
 
-onMounted(() => {
-  obtenerCategorias()
+onMounted(async () => {
+  await obtenerCategorias()
 })
 </script>
 
@@ -78,8 +96,12 @@ onMounted(() => {
         <div class="appointment-form">
           <div class="form-group mb-3">
             <label class="field-label">Categoría</label>
-            <select v-model="form.idCategoria" class="form-control">
-              <option value="0">Seleccione una categoría</option>
+            <select
+              v-model.number="form.idCategoria"
+              class="form-control"
+              style="background-color: #1a1512 !important; color: white !important"
+            >
+              <option :value="0">Seleccione una categoría</option>
               <option v-for="cat in categorias" :key="cat.id" :value="cat.id">
                 {{ cat.nombre }}
               </option>
@@ -288,5 +310,10 @@ select.form-control option {
 .btn-outline-white:hover {
   border-color: rgba(255, 255, 255, 0.5);
   color: #fff;
+}
+select.form-control {
+  -webkit-appearance: auto !important;
+  appearance: auto !important;
+  background-color: #1a1512 !important;
 }
 </style>

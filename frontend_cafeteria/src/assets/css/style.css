@@ -9316,3 +9316,10 @@ textarea.form-control {
 body {
   background-color: #090909 !important;
 }
+
+.block-18 .text span {
+  font-weight: bold !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  font-size: 13px !important;
+}

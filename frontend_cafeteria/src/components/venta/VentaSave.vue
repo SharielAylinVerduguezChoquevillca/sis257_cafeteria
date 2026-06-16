@@ -43,7 +43,12 @@ watch(
   () => props.venta,
   (val) => {
     if (val) {
-      form.value = { ...val }
+      form.value = {
+        ...val,
+        idCliente: Number(val.idCliente || val.cliente?.id || 0),
+        idUsuario: Number(val.idUsuario || val.usuario?.id || authStore.usuario?.id || 0),
+        total: Number(val.total),
+      }
     } else {
       form.value = {
         id: 0,
@@ -104,28 +109,38 @@ async function guardar() {
     alert('Seleccione un cliente')
     return
   }
-  if (detalles.value.length === 0) {
-    alert('Agregue al menos un producto')
-    return
-  }
 
-  const ventaResponse = await axios.post('/ventas', {
-    idCliente: form.value.idCliente,
-    idUsuario: form.value.idUsuario,
-    total: form.value.total,
-    observacion: form.value.observacion,
-  })
-
-  const ventaId = ventaResponse.data.id
-
-  for (const detalle of detalles.value) {
-    await axios.post('/detalle-ventas', {
-      idVenta: ventaId,
-      idProducto: detalle.idProducto,
-      cantidad: detalle.cantidad,
-      precioUnitario: detalle.precioUnitario,
-      subtotal: detalle.subtotal,
+  if (props.modoEdicion) {
+    const payload = {
+      idCliente: Number(form.value.idCliente),
+      idUsuario: authStore.usuario?.id,
+      total: form.value.total,
+      observacion: form.value.observacion,
+    }
+    console.log('payload edicion:', payload)
+    console.log('usuario actual:', authStore.usuario)
+    await axios.patch(`/ventas/${form.value.id}`, payload)
+  } else {
+    if (detalles.value.length === 0) {
+      alert('Agregue al menos un producto')
+      return
+    }
+    const ventaResponse = await axios.post('/ventas', {
+      idCliente: Number(form.value.idCliente),
+      idUsuario: form.value.idUsuario,
+      total: form.value.total,
+      observacion: form.value.observacion,
     })
+    const ventaId = ventaResponse.data.id
+    for (const detalle of detalles.value) {
+      await axios.post('/detalle-ventas', {
+        idVenta: ventaId,
+        idProducto: detalle.idProducto,
+        cantidad: detalle.cantidad,
+        precioUnitario: detalle.precioUnitario,
+        subtotal: detalle.subtotal,
+      })
+    }
   }
 
   emit('guardar')
