@@ -8,7 +8,7 @@ export class CreateClienteDto {
   @MaxLength(100)
   nombre: string;
 
-  @ApiPropertyOptional({ example: '12345678' })
+  @ApiPropertyOptional({ example: '1234567890123' })
   @IsOptional()
   @IsString()
   @MaxLength(20)

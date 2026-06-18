@@ -5,6 +5,7 @@ import type { Venta } from '../../models/venta'
 import type { Cliente } from '../../models/cliente'
 import type { Producto } from '../../models/producto'
 import { useAuthStore } from '../../stores/auth'
+import { computed } from 'vue'
 
 const props = defineProps<{
   mostrar: boolean
@@ -14,9 +15,15 @@ const props = defineProps<{
 
 const emit = defineEmits(['guardar', 'close'])
 const authStore = useAuthStore()
-
+const buscarCliente = ref('')
 const clientes = ref<Cliente[]>([])
 const productos = ref<Producto[]>([])
+const mostrarFormCliente = ref(false)
+
+const nuevoCliente = ref({
+  nombre: '',
+  nit: '',
+})
 
 const form = ref<Venta>({
   id: 0,
@@ -38,6 +45,13 @@ const detalles = ref<
 
 const productoSeleccionado = ref(0)
 const cantidadSeleccionada = ref(1)
+const clientesFiltrados = computed(() => {
+  if (!buscarCliente.value) return clientes.value
+
+  return clientes.value.filter((c) =>
+    c.nombre.toLowerCase().includes(buscarCliente.value.toLowerCase()),
+  )
+})
 
 watch(
   () => props.venta,
@@ -66,12 +80,36 @@ async function obtenerClientes() {
   const response = await axios.get('/clientes')
   clientes.value = response.data
 }
+async function guardarCliente() {
+  const response = await axios.post('/clientes', nuevoCliente.value)
 
-async function obtenerProductos() {
-  const response = await axios.get('/productos')
-  productos.value = response.data
+  await obtenerClientes()
+
+  form.value.idCliente = response.data.id
+
+  mostrarFormCliente.value = false
+
+  nuevoCliente.value = { nombre: '', nit: '' }
 }
 
+async function obtenerProductos() {
+  try {
+    console.log('LLAMANDO /productos...')
+
+    const response = await axios.get('/productos')
+
+    console.log('RESPUESTA BRUTA:', response)
+    console.log('DATA:', response.data)
+
+    productos.value = response.data
+  } catch (error) {
+    console.error('ERROR REAL:', error)
+  }
+}
+function seleccionarCliente(cliente: any) {
+  form.value.idCliente = cliente.id
+  buscarCliente.value = cliente.nombre
+}
 function agregarProducto() {
   if (productoSeleccionado.value === 0) return
   const producto = productos.value.find((p) => p.id === productoSeleccionado.value)
@@ -165,12 +203,30 @@ onMounted(() => {
       <div class="modal-body">
         <div class="form-group">
           <label class="field-label">Cliente</label>
-          <select v-model="form.idCliente" class="control">
-            <option :value="0">Seleccione un cliente</option>
-            <option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id">
-              {{ cliente.nombre }} - {{ cliente.ci }}
-            </option>
-          </select>
+
+          <input
+            v-model="buscarCliente"
+            class="control"
+            placeholder="Escriba para buscar cliente..."
+          />
+
+          <div v-if="buscarCliente" class="lista-clientes">
+            <div
+              v-for="cliente in clientesFiltrados"
+              :key="cliente.id"
+              class="cliente-item"
+              :class="{ activo: form.idCliente === cliente.id }"
+              @click="seleccionarCliente(cliente)"
+            >
+              {{ cliente.nombre }} - {{ cliente.nit || 'SIN NIT' }}
+            </div>
+
+            <div v-if="clientesFiltrados.length === 0" class="sin-resultados">
+              No se encontraron clientes
+            </div>
+          </div>
+
+          <button class="btn-nuevo" @click="mostrarFormCliente = true">+ Nuevo cliente</button>
         </div>
 
         <div class="form-group">
@@ -178,24 +234,26 @@ onMounted(() => {
           <input v-model="form.observacion" class="control" placeholder="Observación (opcional)" />
         </div>
 
-        <div class="divider-light"></div>
+        <div class="product-section">
+          <h4 class="section-title">Agregar productos</h4>
 
-        <h4 class="section-title">Agregar productos</h4>
+          <div class="product-row">
+            <select v-model="productoSeleccionado" class="control product-select">
+              <option :value="0">Seleccione un producto</option>
+              <option v-for="producto in productos" :key="producto.id" :value="producto.id">
+                {{ producto.nombre }} - Bs. {{ producto.precio }}
+              </option>
+            </select>
 
-        <div class="product-row">
-          <select v-model="productoSeleccionado" class="control product-select">
-            <option :value="0">Seleccione un producto</option>
-            <option v-for="producto in productos" :key="producto.id" :value="producto.id">
-              {{ producto.nombre }} - Bs. {{ producto.precio }}
-            </option>
-          </select>
-          <input
-            v-model="cantidadSeleccionada"
-            type="number"
-            min="1"
-            class="control quantity-input"
-          />
-          <button class="btn-agregar" @click="agregarProducto">Agregar</button>
+            <input
+              v-model="cantidadSeleccionada"
+              type="number"
+              min="1"
+              class="control quantity-input"
+            />
+
+            <button class="btn-agregar" @click="agregarProducto">Agregar</button>
+          </div>
         </div>
 
         <div v-if="detalles.length > 0" class="cart-list">
@@ -237,6 +295,40 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <div v-if="mostrarFormCliente" class="modal-overlay" @click.self="mostrarFormCliente = false">
+    <div class="modal-panel modal-small">
+      <div class="modal-header">
+        <h3>Nuevo Cliente</h3>
+
+        <button class="close-btn" @click="mostrarFormCliente = false">✕</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="field-label">Nombre</label>
+          <input v-model="nuevoCliente.nombre" class="control" placeholder="Ingrese el nombre" />
+        </div>
+
+        <div class="form-group">
+          <label class="field-label">NIT</label>
+          <input v-model="nuevoCliente.nit" class="control" placeholder="Opcional" />
+        </div>
+
+        <div class="form-group">
+          <label class="field-label">Teléfono</label>
+          <input v-model="nuevoCliente.telefono" class="control" placeholder="70000000" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancelar" @click="mostrarFormCliente = false">Cancelar</button>
+
+        <button class="btn-guardar" @click="guardarCliente">Guardar cliente</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -258,11 +350,13 @@ onMounted(() => {
   border: 1px solid #e8dcc8;
   border-radius: 16px;
   width: 100%;
-  max-width: 700px;
-  position: relative;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  max-width: 820px;
   max-height: 90vh;
-  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
 }
 
 .modal-panel.modal-large {
@@ -320,7 +414,13 @@ onMounted(() => {
 }
 
 .modal-body {
-  padding: 20px 28px;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  overflow-y: auto;
+  max-height: calc(90vh - 180px);
 }
 
 .section-title {
@@ -370,7 +470,6 @@ select.control {
   cursor: pointer;
 }
 
-/* Fila agregar producto */
 .product-row {
   display: flex;
   gap: 12px;
@@ -379,7 +478,15 @@ select.control {
 }
 
 .product-select {
-  flex: 2;
+  background: #fff;
+  color: #2b1a14;
+  font-weight: 500;
+}
+
+.product-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .quantity-input {
@@ -404,13 +511,13 @@ select.control {
   background: #4a2c2a;
 }
 
-/* Tabla detalle */
 .cart-list {
-  overflow-x: auto;
+  display: block;
   background: #ffffff;
-  border: 1px solid #e8dcc8;
-  border-radius: 10px;
-  margin-bottom: 18px;
+  border: 2px solid rgb(255, 255, 255);
+  min-height: 150px;
+  overflow: auto;
+  margin: 20px 0;
 }
 
 .tabla-detalle {
@@ -476,13 +583,15 @@ select.control {
   color: #fff;
 }
 
-/* Total */
 .total-box {
-  text-align: right;
-  padding: 16px 0 6px;
-  border-top: 2px solid #e8dcc8;
-  margin-top: 6px;
-  font-size: 16px;
+  margin-top: 10px;
+  padding: 12px 0;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  border-top: 1px solid #e8dcc8;
 }
 
 .total-box strong {
@@ -498,11 +607,13 @@ select.control {
   font-weight: 700;
 }
 
-/* Footer */
 .modal-footer {
-  padding: 14px 28px 24px;
+  padding: 16px 28px;
+
   display: flex;
-  gap: 12px;
+  justify-content: center;
+  gap: 14px;
+
   border-top: 1px solid #f0e7d9;
 }
 
@@ -537,5 +648,72 @@ select.control {
 .btn-cancelar:hover {
   background: #f0e7d9;
   color: #4a2c2a;
+}
+.cliente-row {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-nuevo {
+  background: #6f4e37;
+  color: white;
+  border: none;
+  padding: 0 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.lista-clientes {
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1px solid #e8dcc8;
+  border-radius: 8px;
+  margin-top: 8px;
+  background: white;
+}
+
+.cliente-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0e7d9;
+  color: #4a2c2a;
+}
+
+.cliente-item:hover {
+  background: #f6ece0;
+}
+
+.cliente-item.activo {
+  background: #6f4e37;
+  color: white;
+}
+
+.sin-resultados {
+  padding: 10px;
+  color: #a98a66;
+  text-align: center;
+}
+
+.modal-small {
+  max-width: 480px;
+}
+
+.modal-small .modal-body {
+  padding: 28px;
+}
+
+.modal-small .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.modal-small .modal-footer {
+  justify-content: flex-end;
+  padding: 18px 28px;
+}
+
+.modal-small h3 {
+  margin: 0;
 }
 </style>

@@ -32,7 +32,7 @@ const clientesFiltrados = computed(() => {
   return clientes.value.filter((c) => {
     return (
       c.nombre.toLowerCase().includes(busqueda.value.toLowerCase()) ||
-      (c.nit ?? '').toLowerCase().includes(busqueda.value.toLowerCase())
+      (c.nit || '').toLowerCase().includes(busqueda.value.toLowerCase())
     )
   })
 })
