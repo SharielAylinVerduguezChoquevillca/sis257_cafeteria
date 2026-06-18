@@ -1,28 +1,23 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
 import axios from '../../plugins/axios'
-import type { Producto } from '../../models/producto'
-import { useAuthStore } from '../../stores/auth'
+import type { Usuario } from '../../models/usuario'
 
-const authStore = useAuthStore()
-const productos = ref<Producto[]>([])
+const usuarios = ref<Usuario[]>([])
 const emit = defineEmits(['edit'])
 
 const paginaActual = ref(1)
 const productosPorPagina = ref(5)
-const totalProductos = ref(0)
 
 async function obtenerLista() {
-  const response = await axios.get('/productos')
-  console.log(JSON.stringify(response.data[0], null, 2))
-  productos.value = response.data
-  totalProductos.value = response.data.length
+  const response = await axios.get('/usuarios')
+  usuarios.value = response.data
   paginaActual.value = 1
 }
 
 async function eliminar(id: number) {
-  if (confirm('¿Está seguro de eliminar este producto?')) {
-    await axios.delete(`/productos/${id}`)
+  if (confirm('¿Está seguro de eliminar este usuario?')) {
+    await axios.delete(`/usuarios/${id}`)
     await obtenerLista()
   }
 }
@@ -35,21 +30,20 @@ onMounted(() => {
 
 const busqueda = ref('')
 
-const productosFiltrados = computed(() => {
-  if (!busqueda.value) return productos.value
-  return productos.value.filter(
-    (p) =>
-      p.nombre.toLowerCase().includes(busqueda.value.toLowerCase()) ||
-      p.categoria?.nombre.toLowerCase().includes(busqueda.value.toLowerCase()),
+const usuariosFiltrados = computed(() => {
+  if (!busqueda.value) return usuarios.value
+  return usuarios.value.filter((u) =>
+    u.nombre.toLowerCase().includes(busqueda.value.toLowerCase()) ||
+    u.email.toLowerCase().includes(busqueda.value.toLowerCase())
   )
 })
 
-const totalFiltrados = computed(() => productosFiltrados.value.length)
+const totalFiltrados = computed(() => usuariosFiltrados.value.length)
 
-const productosPaginados = computed(() => {
+const usuariosPaginados = computed(() => {
   const inicio = (paginaActual.value - 1) * productosPorPagina.value
   const fin = inicio + productosPorPagina.value
-  return productosFiltrados.value.slice(inicio, fin)
+  return usuariosFiltrados.value.slice(inicio, fin)
 })
 
 const totalPaginas = computed(() => {
@@ -77,9 +71,9 @@ function obtenerRangoPaginas() {
     }
   } else {
     if (actual <= 3) {
-      rango.push(1, 2, 3, 4)
+      rango.push(1, 2, 3, 4, 5)
     } else if (actual >= total - 2) {
-      for (let i = total - 3; i <= total; i++) {
+      for (let i = total - 4; i <= total; i++) {
         rango.push(i)
       }
     } else {
@@ -92,59 +86,54 @@ function obtenerRangoPaginas() {
 
 <template>
   <div>
-    <input v-model="busqueda" class="buscador" placeholder="Buscar producto o categoría..." />
+    <input v-model="busqueda" class="buscador" placeholder="Buscar usuario o email..." />
 
     <div class="tabla-wrapper">
       <table class="tabla">
         <thead>
           <tr>
             <th style="width: 60px">#</th>
-            <th style="width: 70px">Imagen</th>
-            <th>Categoría</th>
             <th>Nombre</th>
-            <th class="t-right">Precio</th>
-            <th class="t-right">Stock</th>
+            <th>Email</th>
+            <th>Rol</th>
             <th class="t-center">Activo</th>
-            <th v-if="authStore.esAdmin()" class="t-center" style="width: 180px">Acciones</th>
+            <th class="t-center" style="width: 180px">Acciones</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr v-if="productosPaginados.length === 0">
-            <td :colspan="authStore.esAdmin() ? 7 : 5" class="vacio">
-              No hay productos registrados
-            </td>
+          <tr v-if="usuariosPaginados.length === 0">
+            <td colspan="6" class="vacio">No hay usuarios registrados</td>
           </tr>
 
-          <tr v-for="(producto, index) in productosPaginados" :key="producto.id">
+          <tr v-for="(usuario, index) in usuariosPaginados" :key="usuario.id">
             <td class="c-num">{{ (paginaActual - 1) * productosPorPagina + index + 1 }}</td>
-            <td>
-              <img v-if="producto.imagen" :src="producto.imagen" alt="producto" class="mini-img" />
-              <span v-else class="sin-img">—</span>
-            </td>
-            <td class="c-cat">{{ producto.categoria?.nombre || 'Sin categoría' }}</td>
-            <td class="c-nombre">{{ producto.nombre }}</td>
-            <td class="t-right c-precio">Bs. {{ producto.precio }}</td>
-            <td class="t-right c-stock">{{ producto.stock }}</td>
-            <td class="t-center">
-              <span class="badge" :class="producto.activo ? 'badge-si' : 'badge-no'">
-                {{ producto.activo ? 'Sí' : 'No' }}
+            <td class="c-nombre">{{ usuario.nombre }}</td>
+            <td class="c-dato">{{ usuario.email }}</td>
+            <td class="c-dato">
+              <span class="badge-rol" :class="usuario.rol === 'ADMIN' ? 'rol-admin' : 'rol-user'">
+                {{ usuario.rol || 'Usuario' }}
               </span>
             </td>
-            <td v-if="authStore.esAdmin()" class="t-center">
-              <button class="btn-editar" @click="emit('edit', producto)">Editar</button>
-              <button class="btn-eliminar" @click="eliminar(producto.id)">Eliminar</button>
+            <td class="t-center">
+              <span class="badge" :class="usuario.activo ? 'badge-si' : 'badge-no'">
+                {{ usuario.activo ? 'Sí' : 'No' }}
+              </span>
+            </td>
+            <td class="t-center">
+              <button class="btn-editar" @click="emit('edit', usuario)">Editar</button>
+              <button class="btn-eliminar" @click="eliminar(usuario.id)">Eliminar</button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div v-if="totalPaginas > 1" class="paginacion">
+    <div v-if="totalFiltrados > 0" class="paginacion">
       <div class="paginacion-info">
         Mostrando {{ (paginaActual - 1) * productosPorPagina + 1 }} -
         {{ Math.min(paginaActual * productosPorPagina, totalFiltrados) }}
-        de {{ totalFiltrados }} productos
+        de {{ totalFiltrados }} usuarios
       </div>
 
       <div class="paginacion-controles">
@@ -160,7 +149,7 @@ function obtenerRangoPaginas() {
           v-for="pagina in obtenerRangoPaginas()"
           :key="pagina"
           class="btn-pagina"
-          :class="{ activo: pagina === paginaActual }"
+          :class="{ 'activo': pagina === paginaActual }"
           @click="irPagina(pagina)"
         >
           {{ pagina }}
@@ -176,13 +165,7 @@ function obtenerRangoPaginas() {
       </div>
 
       <div class="paginacion-items">
-        <select v-model="productosPorPagina" class="select-items">
-          <option :value="5">5</option>
-          <option :value="10">10</option>
-          <option :value="20">20</option>
-          <option :value="50">50</option>
-        </select>
-        <span>por página</span>
+        <span class="texto-items">{{ productosPorPagina }} por página</span>
       </div>
     </div>
   </div>
@@ -219,7 +202,7 @@ function obtenerRangoPaginas() {
 
 .tabla {
   width: 100%;
-  min-width: 760px;
+  min-width: 600px;
   border-collapse: collapse;
   font-size: 13.5px;
 }
@@ -255,18 +238,11 @@ function obtenerRangoPaginas() {
 .c-num {
   color: #a98a66;
 }
-.c-cat {
-  color: #7a6650;
-}
 .c-nombre {
   color: #4a2c2a;
   font-weight: 600;
 }
-.c-precio {
-  color: #4a2c2a;
-  font-weight: 600;
-}
-.c-stock {
+.c-dato {
   color: #7a6650;
 }
 
@@ -304,6 +280,24 @@ function obtenerRangoPaginas() {
   color: #a32d2d;
 }
 
+.badge-rol {
+  display: inline-block;
+  padding: 3px 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.rol-admin {
+  background: #e8dcc8;
+  color: #6f4e37;
+}
+
+.rol-user {
+  background: #f0e7d9;
+  color: #7a6650;
+}
+
 .btn-editar,
 .btn-eliminar {
   font-size: 12px;
@@ -335,18 +329,6 @@ function obtenerRangoPaginas() {
 .btn-eliminar:hover {
   background: #c0563a;
   color: #fff;
-}
-
-.mini-img {
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  object-fit: cover;
-  border: 1px solid #e8dcc8;
-}
-
-.sin-img {
-  color: #c9b599;
 }
 
 .paginacion {
@@ -417,19 +399,9 @@ function obtenerRangoPaginas() {
   color: #7a6650;
 }
 
-.select-items {
-  background: #ffffff;
-  border: 1px solid #e8dcc8;
-  border-radius: 6px;
-  padding: 4px 8px;
+.texto-items {
+  font-weight: 500;
   color: #4a2c2a;
-  font-size: 13px;
-  outline: none;
-  cursor: pointer;
-}
-
-.select-items:focus {
-  border-color: #c49b63;
 }
 
 @media (max-width: 768px) {

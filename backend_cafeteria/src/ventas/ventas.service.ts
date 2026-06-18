@@ -29,8 +29,7 @@ export class VentasService {
       where: { id },
       relations: { cliente: true, usuario: true, detalles: true },
     });
-    if (!venta)
-      throw new NotFoundException(`Venta #${id} no encontrada`);
+    if (!venta) throw new NotFoundException(`Venta #${id} no encontrada`);
     return venta;
   }
 

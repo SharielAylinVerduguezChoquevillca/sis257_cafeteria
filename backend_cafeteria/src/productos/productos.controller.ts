@@ -46,7 +46,7 @@ export class ProductosController {
 
   @Roles('admin')
   @Delete(':id')
-  remove(@Param('id') id: string) { 
+  remove(@Param('id') id: string) {
     return this.service.remove(+id);
   }
 }

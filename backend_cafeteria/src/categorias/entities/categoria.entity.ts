@@ -14,10 +14,10 @@ export class Categoria {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 100})
+  @Column({ type: 'varchar', length: 100 })
   nombre: string;
 
-  @Column({ type: 'varchar', length: 255})
+  @Column({ type: 'varchar', length: 255 })
   descripcion: string;
 
   @OneToMany(() => Producto, (producto) => producto.categoria)

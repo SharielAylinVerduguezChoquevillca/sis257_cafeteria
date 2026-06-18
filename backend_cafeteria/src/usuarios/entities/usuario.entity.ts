@@ -26,7 +26,7 @@ export class Usuario {
 
   @Column({ type: 'varchar', length: 20, nullable: false, default: 'cajero' })
   rol: string;
-  
+
   @CreateDateColumn({ name: 'fecha_creacion' })
   fechaCreacion: Date;
 

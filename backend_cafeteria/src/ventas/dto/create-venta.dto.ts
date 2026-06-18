@@ -18,7 +18,7 @@ export class CreateVentaDto {
   @IsNumber()
   idUsuario: number;
 
-  @ApiProperty({ example: 150.50 })
+  @ApiProperty({ example: 150.5 })
   @IsNotEmpty()
   @IsNumber()
   @IsPositive()

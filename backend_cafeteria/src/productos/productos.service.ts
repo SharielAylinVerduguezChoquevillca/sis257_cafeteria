@@ -29,8 +29,7 @@ export class ProductosService {
       where: { id },
       relations: { categoria: true },
     });
-    if (!producto)
-      throw new NotFoundException(`Producto #${id} no encontrado`);
+    if (!producto) throw new NotFoundException(`Producto #${id} no encontrado`);
     return producto;
   }
 

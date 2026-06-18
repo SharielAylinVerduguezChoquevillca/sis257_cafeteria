@@ -29,8 +29,7 @@ export class DetalleVentasService {
       where: { id },
       relations: { venta: true, producto: true },
     });
-    if (!detalle)
-      throw new NotFoundException(`Detalle #${id} no encontrado`);
+    if (!detalle) throw new NotFoundException(`Detalle #${id} no encontrado`);
     return detalle;
   }
 

@@ -67,6 +67,7 @@ function handleLogout() {
           </RouterLink>
         </li>
 
+
         <li class="w-full mt-4 mb-1">
           <h6 class="sidebar-section">Cuenta</h6>
         </li>

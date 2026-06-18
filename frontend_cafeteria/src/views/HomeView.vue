@@ -20,6 +20,7 @@ onMounted(async () => {
       axios.get('/clientes'),
       axios.get('/ventas'),
       axios.get('/categorias'),
+      axios.get('/usuarios'),
     ])
     totalProductos.value = productos.data.length
     totalClientes.value = clientes.data.length
@@ -58,7 +59,7 @@ onMounted(async () => {
         "
       >
         <h5 style="margin: 0; font-weight: 600; color: #4a2c2a; font-size: 1.1rem">
-          Bienvenido, {{ authStore.usuario?.nombre }} 
+          Bienvenido, {{ authStore.usuario?.nombre }}
         </h5>
         <p style="margin: 2px 0 0; font-size: 0.85rem; color: #a98a66">
           Panel de administración — Cafetería El Buen Gusto

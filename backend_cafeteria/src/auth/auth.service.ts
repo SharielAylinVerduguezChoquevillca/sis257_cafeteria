@@ -14,8 +14,7 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const usuario = await this.usuariosService.findByEmail(loginDto.email);
-    if (!usuario)
-      throw new UnauthorizedException('Credenciales inválidas');
+    if (!usuario) throw new UnauthorizedException('Credenciales inválidas');
 
     const passwordValido = await bcrypt.compare(
       loginDto.password,
@@ -24,11 +23,11 @@ export class AuthService {
     if (!passwordValido)
       throw new UnauthorizedException('Credenciales inválidas');
 
-   const payload = {
+    const payload = {
       sub: usuario.id,
       email: usuario.email,
       nombre: usuario.nombre,
-      rol: usuario.rol,          
+      rol: usuario.rol,
     };
 
     return {
@@ -37,15 +36,14 @@ export class AuthService {
         id: usuario.id,
         nombre: usuario.nombre,
         email: usuario.email,
-        rol: usuario.rol,        
+        rol: usuario.rol,
       },
     };
   }
 
   async verifyPayload(payload: JwtPayload) {
     const usuario = await this.usuariosService.findByEmail(payload.email);
-    if (!usuario)
-      throw new UnauthorizedException('Token inválido');
+    if (!usuario) throw new UnauthorizedException('Token inválido');
     return usuario;
   }
 }

@@ -33,7 +33,13 @@ export class DetalleVenta {
   @Column({ type: 'int', nullable: false })
   cantidad: number;
 
-  @Column({ name: 'precio_unitario', type: 'decimal', precision: 10, scale: 2, nullable: false })
+  @Column({
+    name: 'precio_unitario',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    nullable: false,
+  })
   precioUnitario: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
