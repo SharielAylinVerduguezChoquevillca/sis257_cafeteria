@@ -298,7 +298,8 @@ onMounted(() => {
   <div v-if="mostrarFormCliente" class="modal-overlay" @click.self="mostrarFormCliente = false">
     <div class="modal-panel modal-small">
       <div class="modal-header">
-        <h3>Nuevo Cliente</h3>
+        <span class="subheading-sm">Cafetería</span>
+        <h3>Nuevo cliente</h3>
 
         <button class="close-btn" @click="mostrarFormCliente = false">✕</button>
       </div>
@@ -307,18 +308,13 @@ onMounted(() => {
 
       <div class="modal-body">
         <div class="form-group">
-          <label class="field-label">Nombre</label>
+          <label class="field-label">Nombre del cliente</label>
           <input v-model="nuevoCliente.nombre" class="control" placeholder="Ingrese el nombre" />
         </div>
 
         <div class="form-group">
-          <label class="field-label">NIT</label>
-          <input v-model="nuevoCliente.nit" class="control" placeholder="Opcional" />
-        </div>
-
-        <div class="form-group">
-          <label class="field-label">Teléfono</label>
-          <input v-model="nuevoCliente.telefono" class="control" placeholder="70000000" />
+          <label class="field-label">NIT (Opcional)</label>
+          <input v-model="nuevoCliente.nit" class="control" placeholder="Ingrese el NIT" />
         </div>
       </div>
 
@@ -693,27 +689,27 @@ select.control {
   text-align: center;
 }
 
-.modal-small {
-  max-width: 480px;
+.modal-small{
+    max-width:480px;
 }
 
-.modal-small .modal-body {
-  padding: 28px;
+.modal-small .modal-body{
+    padding:28px;
 }
 
-.modal-small .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 18px;
+.modal-small .form-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:18px;
 }
 
-.modal-small .modal-footer {
-  justify-content: flex-end;
-  padding: 18px 28px;
+.modal-small .modal-footer{
+    justify-content:flex-end;
+    padding:18px 28px;
 }
 
-.modal-small h3 {
-  margin: 0;
+.modal-small h3{
+    margin:0;
 }
 </style>
