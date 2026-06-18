@@ -9,8 +9,11 @@ const authStore = useAuthStore()
 <template>
   <div>
     <MainHeader v-if="authStore.isAuthenticated()" />
-    <main v-if="authStore.isAuthenticated()" class="relative h-full max-h-screen transition-all duration-200 ease-in-out xl:ml-68 rounded-xl">
-      <div class="min-h-screen bg-gray-50">
+    <main
+      v-if="authStore.isAuthenticated()"
+      class="relative h-full max-h-screen transition-all duration-200 ease-in-out xl:ml-68 rounded-xl"
+    >
+      <div class="min-h-screen" style="background-color: #f3e9dc">
         <RouterView />
         <MainFooter />
       </div>
@@ -18,3 +21,11 @@ const authStore = useAuthStore()
     <RouterView v-else />
   </div>
 </template>
+
+<style>
+html,
+body,
+#app {
+  background-color: #f3e9dc;
+}
+</style>

@@ -9,221 +9,261 @@ const authStore = useAuthStore()
 const email = ref('')
 const password = ref('')
 const error = ref('')
+const loading = ref(false)
 
 async function handleLogin() {
   try {
     error.value = ''
+    loading.value = true
     await authStore.login(email.value, password.value)
     router.push('/')
   } catch (e) {
     error.value = 'Credenciales inválidas. Intente nuevamente.'
+  } finally {
+    loading.value = false
   }
 }
 </script>
 
 <template>
-  <div style="min-height: 100vh; background-image: url('/src/assets/images/bg_1.jpg'); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center;">
-    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6);"></div>
-    <div style="position: relative; z-index: 10; width: 100%; max-width: 450px; padding: 20px;">
-      <div style="background: rgba(255,255,255,0.95); border-radius: 12px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-        
-        <div style="text-align: center; margin-bottom: 30px;">
-          <h2 style="font-family: 'Great Vibes', cursive; color: #c49b63; font-size: 2.5rem; margin-bottom: 5px;">El Buen Gusto</h2>
-          <p style="color: #666; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;">Sistema de Gestión</p>
-          <hr style="border-color: #c49b63; width: 60px; margin: 15px auto;">
+  <div class="login-page">
+    <div class="login-overlay"></div>
+
+    <div class="login-wrapper">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="login-logo">
+            <img src="/src/assets/img/logo.png" alt="Logo El Buen Gusto" class="logo-img" />
+          </div>
+          <h1 class="brand">El Buen Gusto</h1>
+          <p class="subtitle">Sistema de gestión</p>
+          <span class="divider"></span>
         </div>
 
-        <div style="margin-bottom: 20px;">
-          <label style="display: block; color: #4a2c2a; font-weight: 600; margin-bottom: 8px; font-size: 14px;">Correo Electrónico</label>
+        <label class="field-label">Correo electrónico</label>
+        <div class="input-group">
+          <svg
+            class="input-icon"
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#A98A66"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <path d="m3 7 9 6 9-6" />
+          </svg>
           <input
             v-model="email"
             type="email"
             placeholder="correo@ejemplo.com"
-            style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; outline: none; transition: border 0.3s; box-sizing: border-box;"
-            @focus="($event.target as HTMLInputElement).style.borderColor = '#c49b63'"
-            @blur="($event.target as HTMLInputElement).style.borderColor = '#e0e0e0'"
-          />
-        </div>
-
-        <div style="margin-bottom: 25px;">
-          <label style="display: block; color: #4a2c2a; font-weight: 600; margin-bottom: 8px; font-size: 14px;">Contraseña</label>
-          <input
-            v-model="password"
-            type="password"
-            placeholder="••••••••"
-            style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; outline: none; transition: border 0.3s; box-sizing: border-box;"
-            @focus="($event.target as HTMLInputElement).style.borderColor = '#c49b63'"
-            @blur="($event.target as HTMLInputElement).style.borderColor = '#e0e0e0'"
+            class="login-input"
             @keyup.enter="handleLogin"
           />
         </div>
 
-        <div v-if="error" style="background: #fff0f0; border: 1px solid #ffcccc; color: #cc0000; padding: 10px 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
+        <label class="field-label">Contraseña</label>
+        <div class="input-group">
+          <svg
+            class="input-icon"
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#A98A66"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="5" y="11" width="14" height="10" rx="2" />
+            <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+          </svg>
+          <input
+            v-model="password"
+            type="password"
+            placeholder="••••••••"
+            class="login-input"
+            @keyup.enter="handleLogin"
+          />
+        </div>
+
+        <div v-if="error" class="error-box">
           {{ error }}
         </div>
 
-        <button
-          @click="handleLogin"
-          style="width: 100%; padding: 14px; background: #4a2c2a; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: background 0.3s;"
-          @mouseover="($event.target as HTMLButtonElement).style.background = '#c49b63'"
-          @mouseleave="($event.target as HTMLButtonElement).style.background = '#4a2c2a'"
-        >
-          Ingresar
+        <button class="login-btn" :disabled="loading" @click="handleLogin">
+          {{ loading ? 'Ingresando...' : 'Ingresar' }}
         </button>
-
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.login-container {
-  min-height: 80vh;
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+.login-page {
+  min-height: 100vh;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: linear-gradient(135deg, #0a0807 0%, #1a1512 100%);
+  background-color: #2a1a12;
+  background-image: url('/src/assets/img/fondo.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
-.login-box {
-  background: #1a1512;
-  border: 1px solid rgba(196, 155, 99, 0.3);
-  width: 100%;
-  max-width: 420px;
+.login-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(36, 20, 16, 0.82), rgba(74, 44, 42, 0.55));
+}
+
+.login-wrapper {
   position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+  width: 100%;
+  max-width: 410px;
+}
+
+.login-card {
+  background: #fbf6ef;
+  border-radius: 16px;
+  padding: 38px 34px;
+  border: 1px solid rgba(196, 155, 99, 0.35);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
 }
 
 .login-header {
-  padding: 40px 30px 20px;
   text-align: center;
-  position: relative;
+  margin-bottom: 26px;
 }
 
-.subheading {
+.login-logo {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.brand {
   font-family: 'Great Vibes', cursive;
-  font-size: 28px;
-  color: #c49b63;
-  display: block;
+  color: #b0832b;
+  font-size: 2.4rem;
   line-height: 1;
-  margin-bottom: 5px;
+  margin: 0;
+  font-weight: 400;
 }
 
-.login-header h2 {
-  font-family: 'Josefin Sans', Arial, sans-serif;
-  font-size: 28px;
+.subtitle {
+  color: #a98a66;
+  font-size: 12px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  letter-spacing: 3px;
-  color: #fff;
-  margin: 10px 0 5px;
-  font-weight: 700;
+  margin: 8px 0 0;
 }
 
-.coffee-icon {
-  font-size: 40px;
-  margin-top: 10px;
-  animation: steam 2s ease-in-out infinite;
-}
-
-@keyframes steam {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  50% {
-    transform: translateY(-5px);
-    opacity: 0.8;
-  }
-}
-
-.gold-divider {
+.divider {
+  display: block;
   height: 2px;
-  background: linear-gradient(to right, transparent, #c49b63, transparent);
-  margin: 0 30px;
-}
-
-.login-body {
-  padding: 30px;
-}
-
-.login-title {
-  font-family: 'Josefin Sans', Arial, sans-serif;
-  font-size: 18px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #c49b63;
-  margin: 0 0 25px 0;
-  font-weight: 600;
-  text-align: center;
+  width: 54px;
+  background: #c49b63;
+  margin: 14px auto 0;
+  border-radius: 2px;
 }
 
 .field-label {
   display: block;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 8px;
-  font-family: 'Work Sans', sans-serif;
-}
-
-.form-control {
-  border: transparent !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
-  height: 48px !important;
-  padding-left: 0;
-  background: transparent !important;
-  color: rgba(255, 255, 255, 0.9) !important;
-  font-size: 14px;
-  border-radius: 0;
-  box-shadow: none !important;
-  transition: border-color 0.3s;
-  width: 100%;
-}
-
-.form-control::placeholder {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-.form-control:focus,
-.form-control:active {
-  border-bottom-color: #c49b63 !important;
-  outline: none;
-}
-
-.error-msg {
-  background: rgba(220, 53, 69, 0.12);
-  border-left: 3px solid #dc3545;
-  color: #f5a0a8;
+  color: #4a2c2a;
+  font-weight: 600;
+  margin-bottom: 7px;
   font-size: 13px;
-  padding: 10px 12px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1.5px solid #e8dcc8;
+  border-radius: 9px;
+  padding: 11px 13px;
+  margin-bottom: 18px;
+  transition: border-color 0.25s;
+}
+
+.input-group:focus-within {
+  border-color: #c49b63;
+}
+
+.input-icon {
+  flex-shrink: 0;
+}
+
+.login-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: #4a2c2a;
+}
+
+.login-input::placeholder {
+  color: #b5a48e;
+}
+
+.error-box {
+  background: #fbeaea;
+  border: 1px solid #e8c4c4;
+  color: #a32d2d;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin: 4px 0 18px;
+  font-size: 13px;
   text-align: center;
 }
 
-.btn-login {
+.login-btn {
   width: 100%;
-  background: #c49b63;
-  border: 1px solid #c49b63;
-  color: #000;
-  font-family: 'Josefin Sans', Arial, sans-serif;
+  padding: 13px;
+  background: #4a2c2a;
+  color: #f3e5d5;
+  border: none;
+  border-radius: 9px;
   font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  border-radius: 0;
-  height: 48px;
-  transition: all 0.3s ease;
-  cursor: pointer;
   font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.3s,
+    transform 0.1s;
 }
 
-.btn-login:hover {
-  background: transparent;
-  color: #c49b63;
+.login-btn:hover:not(:disabled) {
+  background: #6f4e37;
 }
 
-.btn-login:active {
+.login-btn:active:not(:disabled) {
   transform: scale(0.98);
+}
+
+.login-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 </style>

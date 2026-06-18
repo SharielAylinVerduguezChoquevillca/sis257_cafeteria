@@ -48,267 +48,150 @@ onMounted(async () => {
 
 <template>
   <div class="w-full px-6 py-6 mx-auto">
-    <!-- Bienvenida -->
-    <div class="flex flex-wrap -mx-3 mb-6">
-      <div class="w-full px-3">
-        <div
-          class="relative flex flex-col min-w-0 break-words bg-white shadow-xl rounded-2xl bg-clip-border p-6"
-        >
-          <div class="flex items-center">
-            <div>
-              <h5 class="mb-0 font-bold dark:text-white">
-                Bienvenido, {{ authStore.usuario?.nombre }} ☕
-              </h5>
-              <p class="mb-0 text-sm text-slate-500">
-                Panel de Administración — Cafetería El Buen Gusto
-              </p>
-            </div>
-          </div>
-        </div>
+    <div class="mb-6">
+      <div
+        style="
+          background: #fbf6ef;
+          border: 1px solid #e8dcc8;
+          border-radius: 1rem;
+          padding: 1.25rem 1.5rem;
+        "
+      >
+        <h5 style="margin: 0; font-weight: 600; color: #4a2c2a; font-size: 1.1rem">
+          Bienvenido, {{ authStore.usuario?.nombre }} 
+        </h5>
+        <p style="margin: 2px 0 0; font-size: 0.85rem; color: #a98a66">
+          Panel de administración — Cafetería El Buen Gusto
+        </p>
       </div>
     </div>
-    <!-- Cards estadísticas -->
-    <!-- Cards estadísticas -->
+
     <div
       style="
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 1.5rem;
+        gap: 1.25rem;
         margin-bottom: 1.5rem;
       "
     >
-      <!-- Categorías -->
-      <div
-        style="
-          background: white;
-          border-radius: 1rem;
-          box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
-          padding: 1rem;
-        "
-      >
-        <div style="display: flex; justify-content: space-between; align-items: center">
+      <div style="background: white; border: 1px solid #ede2d3; border-radius: 1rem; padding: 1rem">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start">
           <div>
-            <p
-              style="
-                font-size: 11px;
-                font-weight: 700;
-                text-transform: uppercase;
-                color: #8392ab;
-                margin-bottom: 4px;
-              "
-            >
+            <p style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: #a98a66; margin-bottom: 4px;">
               Categorías
             </p>
-            <h5 style="font-size: 1.5rem; font-weight: 700; margin: 0">{{ totalCategorias }}</h5>
-            <p style="font-size: 12px; color: #8392ab; margin: 0">Total registradas</p>
+            <h5 style="font-size: 1.5rem; font-weight: 600; margin: 0; color: #4a2c2a">{{ totalCategorias }}</h5>
+            <p style="font-size: 12px; color: #b5a48e; margin: 0">Total registradas</p>
           </div>
           <RouterLink
             to="/categorias"
-            style="
-              width: 48px;
-              height: 48px;
-              border-radius: 50%;
-              background: linear-gradient(310deg, #f5365c, #f56036);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
+            style="width: 46px; height: 46px; border-radius: 50%; background: #6f4e37; display: flex; align-items: center; justify-content: center;"
           >
-            <i class="ni ni-bullet-list-67" style="color: white; font-size: 18px"></i>
+            <i class="ni ni-bullet-list-67" style="color: #f3e5d5; font-size: 18px"></i>
           </RouterLink>
         </div>
       </div>
 
-      <!-- Productos -->
-      <div
-        style="
-          background: white;
-          border-radius: 1rem;
-          box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
-          padding: 1rem;
-        "
-      >
-        <div style="display: flex; justify-content: space-between; align-items: center">
+      <div style="background: white; border: 1px solid #ede2d3; border-radius: 1rem; padding: 1rem">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start">
           <div>
-            <p
-              style="
-                font-size: 11px;
-                font-weight: 700;
-                text-transform: uppercase;
-                color: #8392ab;
-                margin-bottom: 4px;
-              "
-            >
+            <p style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: #a98a66; margin-bottom: 4px;">
               Productos
             </p>
-            <h5 style="font-size: 1.5rem; font-weight: 700; margin: 0">{{ totalProductos }}</h5>
-            <p style="font-size: 12px; color: #8392ab; margin: 0">En catálogo</p>
+            <h5 style="font-size: 1.5rem; font-weight: 600; margin: 0; color: #4a2c2a">{{ totalProductos }}</h5>
+            <p style="font-size: 12px; color: #b5a48e; margin: 0">En catálogo</p>
           </div>
           <RouterLink
             to="/productos"
-            style="
-              width: 48px;
-              height: 48px;
-              border-radius: 50%;
-              background: linear-gradient(310deg, #7928ca, #ff0080);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
+            style="width: 46px; height: 46px; border-radius: 50%; background: #b0832b; display: flex; align-items: center; justify-content: center;"
           >
-            <i class="ni ni-box-2" style="color: white; font-size: 18px"></i>
+            <i class="ni ni-box-2" style="color: #fbf6ef; font-size: 18px"></i>
           </RouterLink>
         </div>
       </div>
 
-      <!-- Clientes -->
-      <div
-        style="
-          background: white;
-          border-radius: 1rem;
-          box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
-          padding: 1rem;
-        "
-      >
-        <div style="display: flex; justify-content: space-between; align-items: center">
+      <div style="background: white; border: 1px solid #ede2d3; border-radius: 1rem; padding: 1rem">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start">
           <div>
-            <p
-              style="
-                font-size: 11px;
-                font-weight: 700;
-                text-transform: uppercase;
-                color: #8392ab;
-                margin-bottom: 4px;
-              "
-            >
+            <p style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: #a98a66; margin-bottom: 4px;">
               Clientes
             </p>
-            <h5 style="font-size: 1.5rem; font-weight: 700; margin: 0">{{ totalClientes }}</h5>
-            <p style="font-size: 12px; color: #8392ab; margin: 0">Registrados</p>
+            <h5 style="font-size: 1.5rem; font-weight: 600; margin: 0; color: #4a2c2a">{{ totalClientes }}</h5>
+            <p style="font-size: 12px; color: #b5a48e; margin: 0">Registrados</p>
           </div>
           <RouterLink
             to="/clientes"
-            style="
-              width: 48px;
-              height: 48px;
-              border-radius: 50%;
-              background: linear-gradient(310deg, #17ad37, #98ec2d);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
+            style="width: 46px; height: 46px; border-radius: 50%; background: #c0703d; display: flex; align-items: center; justify-content: center;"
           >
-            <i class="ni ni-single-02" style="color: white; font-size: 18px"></i>
+            <i class="ni ni-single-02" style="color: #fbf6ef; font-size: 18px"></i>
           </RouterLink>
         </div>
       </div>
 
-      <!-- Ventas -->
-      <div
-        style="
-          background: white;
-          border-radius: 1rem;
-          box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
-          padding: 1rem;
-        "
-      >
-        <div style="display: flex; justify-content: space-between; align-items: center">
+      <div style="background: white; border: 1px solid #ede2d3; border-radius: 1rem; padding: 1rem">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start">
           <div>
-            <p
-              style="
-                font-size: 11px;
-                font-weight: 700;
-                text-transform: uppercase;
-                color: #8392ab;
-                margin-bottom: 4px;
-              "
-            >
+            <p style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: #a98a66; margin-bottom: 4px;">
               Ventas
             </p>
-            <h5 style="font-size: 1.5rem; font-weight: 700; margin: 0">{{ totalVentas }}</h5>
-            <p style="font-size: 12px; color: #2dce89; font-weight: 600; margin: 0">
+            <h5 style="font-size: 1.5rem; font-weight: 600; margin: 0; color: #4a2c2a">{{ totalVentas }}</h5>
+            <p style="font-size: 12px; color: #3b6d11; font-weight: 600; margin: 0">
               Bs. {{ totalRecaudado.toFixed(2) }} recaudado
             </p>
           </div>
           <RouterLink
             to="/ventas"
-            style="
-              width: 48px;
-              height: 48px;
-              border-radius: 50%;
-              background: linear-gradient(310deg, #f5365c, #f56036);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
+            style="width: 46px; height: 46px; border-radius: 50%; background: #4a2c2a; display: flex; align-items: center; justify-content: center;"
           >
-            <i class="ni ni-cart" style="color: white; font-size: 18px"></i>
+            <i class="ni ni-cart" style="color: #f3e5d5; font-size: 18px"></i>
           </RouterLink>
         </div>
       </div>
     </div>
 
-    <!-- Últimas ventas y Top productos -->
     <div class="flex flex-wrap -mx-3">
-      <!-- Últimas ventas -->
       <div class="w-full max-w-full px-3 lg:w-7/12 mb-6">
         <div
-          class="relative flex flex-col min-w-0 break-words bg-white shadow-xl rounded-2xl bg-clip-border"
+          style="background: white; border: 1px solid #ede2d3; border-radius: 1rem; overflow: hidden;"
         >
-          <div class="p-4 pb-0 mb-0 border-b border-gray-200">
+          <div style="padding: 1rem 1.25rem; border-bottom: 1px solid #f0e7d9">
             <div class="flex justify-between items-center">
-              <h6 class="mb-0 font-bold">🛒 Últimas Ventas</h6>
-              <RouterLink to="/ventas" class="text-sm text-blue-500 font-semibold"
-                >Ver todas →</RouterLink
-              >
+              <h6 style="margin: 0; font-weight: 600; color: #4a2c2a">🛒 Últimas ventas</h6>
+              <RouterLink to="/ventas" style="font-size: 0.85rem; color: #6f4e37; font-weight: 600">
+                Ver todas →
+              </RouterLink>
             </div>
           </div>
-          <div class="flex-auto p-4">
+          <div class="p-4">
             <div class="overflow-x-auto">
-              <table class="w-full mb-0 align-top border-collapse">
+              <table class="w-full mb-0 border-collapse">
                 <thead>
-                  <tr>
-                    <th
-                      class="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500 border-b"
-                    >
-                      #
-                    </th>
-                    <th
-                      class="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500 border-b"
-                    >
-                      Cliente
-                    </th>
-                    <th
-                      class="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500 border-b"
-                    >
-                      Fecha
-                    </th>
-                    <th
-                      class="px-4 py-3 text-right text-xs font-semibold uppercase text-slate-500 border-b"
-                    >
-                      Total
-                    </th>
+                  <tr style="background: #6f4e37">
+                    <th style="padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; color: #f3e5d5;">#</th>
+                    <th style="padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; color: #f3e5d5;">Cliente</th>
+                    <th style="padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; color: #f3e5d5;">Fecha</th>
+                    <th style="padding: 10px 14px; text-align: right; font-size: 11px; font-weight: 600; text-transform: uppercase; color: #f3e5d5;">Total</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr
                     v-for="venta in ultimasVentas"
                     :key="venta.id"
-                    class="border-b border-gray-100"
+                    style="border-bottom: 1px solid #f0e7d9"
                   >
-                    <td class="px-4 py-3 text-sm text-slate-400">{{ venta.id }}</td>
-                    <td class="px-4 py-3 text-sm font-semibold text-slate-700">
+                    <td style="padding: 12px 14px; font-size: 0.85rem; color: #b5a48e">{{ venta.id }}</td>
+                    <td style="padding: 12px 14px; font-size: 0.85rem; font-weight: 600; color: #4a2c2a">
                       {{ venta.cliente?.nombre || 'Sin cliente' }}
                     </td>
-                    <td class="px-4 py-3 text-sm text-slate-500">
+                    <td style="padding: 12px 14px; font-size: 0.85rem; color: #7a6650">
                       {{ new Date(venta.fecha).toLocaleDateString() }}
                     </td>
-                    <td class="px-4 py-3 text-sm font-bold text-emerald-500 text-right">
+                    <td style="padding: 12px 14px; font-size: 0.85rem; font-weight: 700; color: #3b6d11; text-align: right">
                       Bs. {{ venta.total }}
                     </td>
                   </tr>
                   <tr v-if="ultimasVentas.length === 0">
-                    <td colspan="4" class="px-4 py-6 text-center text-sm text-slate-400">
+                    <td colspan="4" style="padding: 1.5rem; text-align: center; font-size: 0.85rem; color: #b5a48e">
                       No hay ventas registradas
                     </td>
                   </tr>
@@ -319,63 +202,57 @@ onMounted(async () => {
         </div>
       </div>
 
-      <!-- Top productos -->
       <div class="w-full max-w-full px-3 lg:w-5/12 mb-6">
         <div
-          class="relative flex flex-col min-w-0 break-words bg-white shadow-xl rounded-2xl bg-clip-border"
+          style="background: white; border: 1px solid #ede2d3; border-radius: 1rem; overflow: hidden;"
         >
-          <div class="p-4 pb-0 mb-0 border-b border-gray-200">
+          <div style="padding: 1rem 1.25rem; border-bottom: 1px solid #f0e7d9">
             <div class="flex justify-between items-center">
-              <h6 class="mb-0 font-bold">☕ Top Productos</h6>
-              <RouterLink to="/productos" class="text-sm text-blue-500 font-semibold"
-                >Ver todos →</RouterLink
-              >
+              <h6 style="margin: 0; font-weight: 600; color: #4a2c2a">Top productos</h6>
+              <RouterLink to="/productos" style="font-size: 0.85rem; color: #6f4e37; font-weight: 600">
+                Ver todos →
+              </RouterLink>
             </div>
           </div>
-          <div class="flex-auto p-4">
+          <div class="p-4">
             <ul class="flex flex-col pl-0 mb-0">
               <li
                 v-for="(producto, index) in topProductos"
                 :key="producto.id"
-                class="relative flex justify-between py-3 border-b border-gray-100"
+                style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0e7d9;"
               >
                 <div class="flex items-center">
                   <div
-                    class="inline-block w-8 h-8 mr-4 text-center text-white shadow-sm rounded-xl flex items-center justify-center font-bold"
-                    :class="
-                      index === 0
-                        ? 'bg-gradient-to-tl from-orange-500 to-yellow-500'
-                        : index === 1
-                          ? 'bg-gradient-to-tl from-blue-500 to-violet-500'
-                          : 'bg-gradient-to-tl from-slate-600 to-slate-300'
-                    "
+                    style="width: 32px; height: 32px; margin-right: 14px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 0.85rem;"
+                    :style="{
+                      background: index === 0 ? '#B0832B' : index === 1 ? '#6F4E37' : '#C9A876',
+                    }"
                   >
                     {{ index + 1 }}
                   </div>
                   <div class="flex flex-col">
-                    <h6 class="mb-0 text-sm font-semibold text-slate-700">{{ producto.nombre }}</h6>
-                    <span class="text-xs text-slate-400"
-                      >{{ producto.categoria?.nombre }} ·
-                      {{ (producto as any).vendidos }} vendidos</span
-                    >
+                    <h6 style="margin: 0; font-size: 0.85rem; font-weight: 600; color: #4a2c2a">{{ producto.nombre }}</h6>
+                    <span style="font-size: 0.75rem; color: #a98a66">
+                      {{ producto.categoria?.nombre }} · {{ (producto as any).vendidos }} vendidos
+                    </span>
                   </div>
                 </div>
                 <div class="text-right">
-                  <span class="text-sm font-bold text-emerald-500">Bs. {{ producto.precio }}</span>
+                  <span style="font-size: 0.85rem; font-weight: 700; color: #3b6d11">Bs. {{ producto.precio }}</span>
                   <br />
-                  <span class="text-xs text-slate-400">Stock: {{ producto.stock }}</span>
+                  <span style="font-size: 0.75rem; color: #b5a48e">Stock: {{ producto.stock }}</span>
                 </div>
               </li>
-              <li v-if="topProductos.length === 0" class="py-4 text-center text-sm text-slate-400">
+              <li v-if="topProductos.length === 0" style="padding: 1rem; text-align: center; font-size: 0.85rem; color: #b5a48e">
                 No hay productos registrados
               </li>
             </ul>
             <div class="text-center mt-4">
               <RouterLink
                 to="/ventas"
-                class="inline-block px-6 py-2 text-sm font-bold text-white rounded-lg bg-gradient-to-tl from-red-600 to-orange-600"
+                style="display: inline-block; padding: 0.5rem 1.5rem; font-size: 0.85rem; font-weight: 700; color: #f3e5d5; border-radius: 0.5rem; background: #6f4e37;"
               >
-                + Nueva Venta
+                + Nueva venta
               </RouterLink>
             </div>
           </div>

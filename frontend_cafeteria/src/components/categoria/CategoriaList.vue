@@ -30,125 +30,174 @@ const busqueda = ref('')
 
 const categoriasFiltradas = computed(() => {
   if (!busqueda.value) return categorias.value
-  return categorias.value.filter(c =>
-    c.nombre.toLowerCase().includes(busqueda.value.toLowerCase())
+  return categorias.value.filter((c) =>
+    c.nombre.toLowerCase().includes(busqueda.value.toLowerCase()),
   )
 })
 </script>
 
 <template>
-  <div class="cart-list">
-    <input
-      v-model="busqueda"
-      class="form-control mb-3"
-      placeholder="Buscar categoría..."
-      style="background: rgba(255,255,255,0.05); border: 1px solid rgba(196,155,99,0.3); color: white; border-radius: 8px; padding: 10px 15px;"
-    />
-    <table class="table">
-      <thead>
-        <tr class="thead-primary">
-          <th style="width: 60px">#</th>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th v-if="authStore.esAdmin()" style="width: 180px">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="categoriasFiltradas.length === 0">
-          <td :colspan="authStore.esAdmin() ? 4 : 3" class="text-center py-5">
-            <span style="color: #c49b63; font-size: 14px; letter-spacing: 1px; text-transform: uppercase;">
+  <div>
+    <input v-model="busqueda" class="buscador" placeholder="Buscar categoría..." />
+
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th style="width: 60px">#</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th v-if="authStore.esAdmin()" class="t-center" style="width: 180px">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-if="categoriasFiltradas.length === 0">
+            <td :colspan="authStore.esAdmin() ? 4 : 3" class="vacio">
               No hay categorías registradas
-            </span>
-          </td>
-        </tr>
-        <tr v-for="(categoria, index) in categoriasFiltradas" :key="categoria.id">
-          <td>{{ index + 1 }}</td>
-          <td class="product-name">
-            <h3>{{ categoria.nombre }}</h3>
-          </td>
-          <td>{{ categoria.descripcion || '—' }}</td>
-          <td v-if="authStore.esAdmin()">
-            <button class="btn btn-sm btn-warning mr-2" @click="emit('edit', categoria)">
-              Editar
-            </button>
-            <button class="btn btn-sm btn-danger" @click="eliminar(categoria.id)">Eliminar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+          </tr>
+
+          <tr v-for="(categoria, index) in categoriasFiltradas" :key="categoria.id">
+            <td class="c-num">{{ index + 1 }}</td>
+            <td class="c-nombre">{{ categoria.nombre }}</td>
+            <td class="c-dato">{{ categoria.descripcion || '—' }}</td>
+            <td v-if="authStore.esAdmin()" class="t-center">
+              <div class="acciones">
+                <button class="btn-editar" @click="emit('edit', categoria)">Editar</button>
+                <button class="btn-eliminar" @click="eliminar(categoria.id)">Eliminar</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.cart-list {
+.buscador {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e8dcc8;
+  color: #4a2c2a;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 14px;
+  margin-bottom: 1rem;
+  outline: none;
+  transition: border-color 0.25s;
+}
+
+.buscador::placeholder {
+  color: #b5a48e;
+}
+
+.buscador:focus {
+  border-color: #c49b63;
+}
+
+.tabla-wrapper {
   overflow-x: auto;
-  border: 1px solid rgba(196, 155, 99, 0.2);
+  background: #fbf6ef;
+  border: 1px solid #e8dcc8;
+  border-radius: 12px;
 }
-.table {
-  min-width: 600px !important;
-  background: transparent;
+
+.tabla {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  font-size: 13.5px;
 }
-.table .thead-primary {
-  background: #c49b63;
+
+.tabla thead tr {
+  background: #4a2c2a;
 }
-.table .thead-primary th {
-  color: #000 !important;
-  font-family: 'Josefin Sans', Arial, sans-serif;
+
+.tabla thead th {
+  color: #f3e5d5;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 0.05em;
   font-size: 12px;
-  padding: 16px 12px;
-  border: 1px solid transparent !important;
+  font-weight: 600;
+  padding: 14px 14px;
+  text-align: left;
+}
+
+.tabla tbody td {
+  padding: 14px 14px;
+  border-bottom: 1px solid #f0e7d9;
+  vertical-align: middle;
+}
+
+.tabla tbody tr:nth-child(even) {
+  background: #fcf7f0;
+}
+
+.tabla tbody tr:hover {
+  background: #f6ece0;
+}
+
+.c-num {
+  color: #a98a66;
+}
+.c-nombre {
+  color: #4a2c2a;
   font-weight: 600;
 }
-.table tbody tr td {
-  color: #cccccc;
-  background: transparent;
-  border: 1px solid transparent !important;
-  border-bottom: 1px solid rgba(196, 155, 99, 0.15) !important;
-  padding: 18px 12px;
-  vertical-align: middle;
-  text-align: left !important;
+.c-dato {
+  color: #7a6650;
 }
-.table tbody tr td.product-name h3 {
+
+.t-center {
+  text-align: center;
+}
+
+.vacio {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #a98a66;
   font-size: 14px;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  letter-spacing: 1px;
+}
+
+.acciones {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn-editar,
+.btn-eliminar {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-editar {
+  background: transparent;
+  border: 1px solid #b0832b;
+  color: #b0832b;
+}
+
+.btn-editar:hover {
+  background: #b0832b;
   color: #fff;
-  margin: 0;
 }
-.table tbody tr:hover td {
-  background: rgba(196, 155, 99, 0.05);
-}
-.btn-warning {
+
+.btn-eliminar {
   background: transparent;
-  border: 1px solid #c49b63;
-  color: #c49b63;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  padding: 5px 12px;
-  border-radius: 0;
-  transition: all 0.3s ease;
+  border: 1px solid #c0563a;
+  color: #c0563a;
 }
-.btn-warning:hover {
-  background: #c49b63;
-  color: #000;
-}
-.btn-danger {
-  background: transparent;
-  border: 1px solid rgba(220, 53, 69, 0.6);
-  color: rgba(220, 53, 69, 0.8);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  padding: 5px 12px;
-  border-radius: 0;
-  transition: all 0.3s ease;
-}
-.btn-danger:hover {
-  background: #dc3545;
-  border-color: #dc3545;
+
+.btn-eliminar:hover {
+  background: #c0563a;
   color: #fff;
 }
 </style>

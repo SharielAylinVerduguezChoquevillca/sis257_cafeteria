@@ -26,46 +26,37 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="cart-list">
-    <table class="table">
+  <div class="tabla-wrapper">
+    <table class="tabla">
       <thead>
-        <tr class="thead-primary">
+        <tr>
           <th style="width: 60px">#</th>
           <th>Fecha</th>
           <th>Cliente</th>
           <th>Usuario</th>
-          <th>Total</th>
+          <th class="t-right">Total</th>
           <th>Observación</th>
-          <th style="width: 180px">Acciones</th>
+          <th class="t-center" style="width: 180px">Acciones</th>
         </tr>
       </thead>
 
       <tbody>
         <tr v-if="ventas.length === 0">
-          <td colspan="7" class="text-center py-5">
-            <span
-              style="
-                color: #c49b63;
-                font-size: 14px;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-              "
-            >
-              No hay ventas registradas
-            </span>
-          </td>
+          <td colspan="7" class="vacio">No hay ventas registradas</td>
         </tr>
 
         <tr v-for="(venta, index) in ventas" :key="venta.id">
-          <td>{{ index + 1 }}</td>
-          <td>{{ new Date(venta.fecha!).toLocaleDateString() }}</td>
-          <td>{{ venta.cliente?.nombre }}</td>
-          <td>{{ venta.usuario?.nombre }}</td>
-          <td class="text-gold">Bs. {{ venta.total }}</td>
-          <td>{{ venta.observacion }}</td>
-          <td>
-            <button class="btn btn-sm btn-warning mr-2" @click="emit('edit', venta)">Editar</button>
-            <button class="btn btn-sm btn-danger" @click="eliminar(venta.id)">Eliminar</button>
+          <td class="c-num">{{ index + 1 }}</td>
+          <td class="c-dato">{{ new Date(venta.fecha!).toLocaleDateString() }}</td>
+          <td class="c-nombre">{{ venta.cliente?.nombre }}</td>
+          <td class="c-dato">{{ venta.usuario?.nombre }}</td>
+          <td class="t-right c-total">Bs. {{ venta.total }}</td>
+          <td class="c-dato">{{ venta.observacion || '—' }}</td>
+          <td class="t-center">
+            <div class="acciones">
+              <button class="btn-editar" @click="emit('edit', venta)">Editar</button>
+              <button class="btn-eliminar" @click="eliminar(venta.id)">Eliminar</button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -74,82 +65,114 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.cart-list {
+.tabla-wrapper {
   overflow-x: auto;
-  border: 1px solid rgba(196, 155, 99, 0.2);
+  background: #fbf6ef;
+  border: 1px solid #e8dcc8;
+  border-radius: 12px;
 }
 
-.table {
-  min-width: 800px !important;
-  background: transparent;
+.tabla {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+  font-size: 13.5px;
 }
 
-.table .thead-primary {
-  background: #c49b63;
+.tabla thead tr {
+  background: #4a2c2a;
 }
 
-.table .thead-primary th {
-  color: #000 !important;
-  font-family: 'Josefin Sans', Arial, sans-serif;
+.tabla thead th {
+  color: #f3e5d5;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 0.05em;
   font-size: 12px;
-  padding: 16px 12px;
-  border: 1px solid transparent !important;
   font-weight: 600;
+  padding: 14px 14px;
+  text-align: left;
 }
 
-.table tbody tr td {
-  color: #cccccc;
-  background: transparent;
-  border: 1px solid transparent !important;
-  border-bottom: 1px solid rgba(196, 155, 99, 0.15) !important;
-  padding: 18px 12px;
+.tabla tbody td {
+  padding: 14px 14px;
+  border-bottom: 1px solid #f0e7d9;
   vertical-align: middle;
-  text-align: left !important;
 }
 
-.table tbody tr:hover td {
-  background: rgba(196, 155, 99, 0.05);
+.tabla tbody tr:nth-child(even) {
+  background: #fcf7f0;
 }
 
-.text-gold {
-  color: #c49b63 !important;
+.tabla tbody tr:hover {
+  background: #f6ece0;
+}
+
+.c-num {
+  color: #a98a66;
+}
+.c-nombre {
+  color: #4a2c2a;
   font-weight: 600;
 }
+.c-dato {
+  color: #7a6650;
+}
+.c-total {
+  color: #3b6d11;
+  font-weight: 700;
+}
 
-.btn-warning {
-  background: transparent;
-  border: 1px solid #c49b63;
-  color: #c49b63;
-  font-size: 11px;
+.t-right {
+  text-align: right;
+}
+.t-center {
+  text-align: center;
+}
+
+.vacio {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #a98a66;
+  font-size: 14px;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  padding: 5px 12px;
-  border-radius: 0;
-  transition: all 0.3s ease;
 }
 
-.btn-warning:hover {
-  background: #c49b63;
-  color: #000;
+.acciones {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
 
-.btn-danger {
+.btn-editar,
+.btn-eliminar {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-editar {
   background: transparent;
-  border: 1px solid rgba(220, 53, 69, 0.6);
-  color: rgba(220, 53, 69, 0.8);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  padding: 5px 12px;
-  border-radius: 0;
-  transition: all 0.3s ease;
+  border: 1px solid #b0832b;
+  color: #b0832b;
 }
 
-.btn-danger:hover {
-  background: #dc3545;
-  border-color: #dc3545;
+.btn-editar:hover {
+  background: #b0832b;
+  color: #fff;
+}
+
+.btn-eliminar {
+  background: transparent;
+  border: 1px solid #c0563a;
+  color: #c0563a;
+}
+
+.btn-eliminar:hover {
+  background: #c0563a;
   color: #fff;
 }
 </style>
