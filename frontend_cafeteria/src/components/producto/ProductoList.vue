@@ -10,6 +10,7 @@ const emit = defineEmits(['edit'])
 
 async function obtenerLista() {
   const response = await axios.get('/productos')
+  console.log(JSON.stringify(response.data[0], null, 2))
   productos.value = response.data
 }
 
@@ -40,17 +41,14 @@ const productosFiltrados = computed(() => {
 
 <template>
   <div>
-    <input
-      v-model="busqueda"
-      class="buscador"
-      placeholder="Buscar producto o categoría..."
-    />
+    <input v-model="busqueda" class="buscador" placeholder="Buscar producto o categoría..." />
 
     <div class="tabla-wrapper">
       <table class="tabla">
         <thead>
           <tr>
             <th style="width: 60px">#</th>
+            <th style="width: 70px">Imagen</th>
             <th>Categoría</th>
             <th>Nombre</th>
             <th class="t-right">Precio</th>
@@ -69,6 +67,10 @@ const productosFiltrados = computed(() => {
 
           <tr v-for="(producto, index) in productosFiltrados" :key="producto.id">
             <td class="c-num">{{ index + 1 }}</td>
+            <td>
+              <img v-if="producto.imagen" :src="producto.imagen" alt="producto" class="mini-img" />
+              <span v-else class="sin-img">—</span>
+            </td>
             <td class="c-cat">{{ producto.categoria?.nombre || 'Sin categoría' }}</td>
             <td class="c-nombre">{{ producto.nombre }}</td>
             <td class="t-right c-precio">Bs. {{ producto.precio }}</td>
@@ -213,7 +215,7 @@ const productosFiltrados = computed(() => {
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin: 0 3px;
+  margin: 0 2px;
 }
 
 .btn-editar {
@@ -236,5 +238,15 @@ const productosFiltrados = computed(() => {
 .btn-eliminar:hover {
   background: #c0563a;
   color: #fff;
+}
+.mini-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #e8dcc8;
+}
+.sin-img {
+  color: #c9b599;
 }
 </style>

@@ -37,6 +37,9 @@ export class Producto {
   @Column({ type: 'boolean', nullable: false, default: true })
   activo: boolean;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  imagen: string;
+
   @CreateDateColumn({ name: 'fecha_creacion' })
   fechaCreacion: Date;
 

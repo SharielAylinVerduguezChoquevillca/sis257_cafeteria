@@ -117,8 +117,6 @@ async function guardar() {
       total: form.value.total,
       observacion: form.value.observacion,
     }
-    console.log('payload edicion:', payload)
-    console.log('usuario actual:', authStore.usuario)
     await axios.patch(`/ventas/${form.value.id}`, payload)
   } else {
     if (detalles.value.length === 0) {
@@ -156,100 +154,98 @@ onMounted(() => {
 <template>
   <div v-if="mostrar" class="modal-overlay" @click.self="emit('close')">
     <div class="modal-panel modal-large">
-      <div class="modal-header-coffee">
+      <div class="modal-header">
         <span class="subheading-sm">Cafetería</span>
-        <h3>Nueva Venta - El Buen Gusto</h3>
+        <h3>{{ modoEdicion ? 'Editar venta' : 'Nueva venta' }} — El Buen Gusto</h3>
         <button class="close-btn" @click="emit('close')">✕</button>
       </div>
 
-      <div class="gold-divider"></div>
+      <div class="divider"></div>
 
-      <div class="modal-body-coffee">
-        <div class="appointment-form">
-          <div class="form-group mb-4">
-            <label class="field-label">Cliente</label>
-            <select v-model="form.idCliente" class="form-control">
-              <option :value="0">Seleccione un cliente</option>
-              <option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id">
-                {{ cliente.nombre }} - {{ cliente.ci }}
-              </option>
-            </select>
-          </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="field-label">Cliente</label>
+          <select v-model="form.idCliente" class="control">
+            <option :value="0">Seleccione un cliente</option>
+            <option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id">
+              {{ cliente.nombre }} - {{ cliente.ci }}
+            </option>
+          </select>
+        </div>
 
-          <div class="form-group mb-4">
-            <label class="field-label">Observación</label>
-            <input
-              v-model="form.observacion"
-              class="form-control"
-              placeholder="Observación (opcional)"
-            />
-          </div>
+        <div class="form-group">
+          <label class="field-label">Observación</label>
+          <input v-model="form.observacion" class="control" placeholder="Observación (opcional)" />
+        </div>
 
-          <div class="gold-divider-light my-4"></div>
+        <div class="divider-light"></div>
 
-          <h4 class="section-title">Agregar Productos</h4>
+        <h4 class="section-title">Agregar productos</h4>
 
-          <div class="product-row mb-4">
-            <select v-model="productoSeleccionado" class="form-control product-select">
-              <option :value="0">Seleccione un producto</option>
-              <option v-for="producto in productos" :key="producto.id" :value="producto.id">
-                {{ producto.nombre }} - Bs. {{ producto.precio }}
-              </option>
-            </select>
-            <input
-              v-model="cantidadSeleccionada"
-              type="number"
-              min="1"
-              class="form-control quantity-input"
-            />
-            <button class="btn btn-primary add-btn" @click="agregarProducto">Agregar</button>
-          </div>
+        <div class="product-row">
+          <select v-model="productoSeleccionado" class="control product-select">
+            <option :value="0">Seleccione un producto</option>
+            <option v-for="producto in productos" :key="producto.id" :value="producto.id">
+              {{ producto.nombre }} - Bs. {{ producto.precio }}
+            </option>
+          </select>
+          <input
+            v-model="cantidadSeleccionada"
+            type="number"
+            min="1"
+            class="control quantity-input"
+          />
+          <button class="btn-agregar" @click="agregarProducto">Agregar</button>
+        </div>
 
-          <div v-if="detalles.length > 0" class="cart-list-sm mb-4">
-            <table class="table-sm">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th>Precio Unit.</th>
-                  <th>Cantidad</th>
-                  <th>Subtotal</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(detalle, index) in detalles" :key="index">
-                  <td class="product-name">{{ detalle.productoNombre }}</td>
-                  <td>Bs. {{ detalle.precioUnitario }}</td>
-                  <td>{{ detalle.cantidad }}</td>
-                  <td class="text-gold">Bs. {{ detalle.subtotal }}</td>
-                  <td>
-                    <button class="btn-remove" @click="eliminarDetalle(index)">✕</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div v-if="detalles.length > 0" class="cart-list">
+          <table class="tabla-detalle">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th class="t-right">Precio unit.</th>
+                <th class="t-center">Cantidad</th>
+                <th class="t-right">Subtotal</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(detalle, index) in detalles" :key="index">
+                <td class="c-nombre">{{ detalle.productoNombre }}</td>
+                <td class="t-right c-dato">Bs. {{ detalle.precioUnitario }}</td>
+                <td class="t-center c-dato">{{ detalle.cantidad }}</td>
+                <td class="t-right c-subtotal">Bs. {{ detalle.subtotal }}</td>
+                <td class="t-center">
+                  <button class="btn-remove" @click="eliminarDetalle(index)">✕</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-          <div class="total-box">
-            <strong>Total:</strong>
-            <span class="total-amount">Bs. {{ form.total }}</span>
-          </div>
+        <div class="total-box">
+          <strong>Total:</strong>
+          <span class="total-amount">Bs. {{ form.total }}</span>
         </div>
       </div>
 
-      <div class="modal-footer-coffee">
-        <button class="btn btn-primary px-4" @click="guardar">Registrar Venta</button>
-        <button class="btn btn-outline-white ml-3" @click="emit('close')">Cancelar</button>
+      <div class="modal-footer">
+        <button class="btn-guardar" @click="guardar">
+          {{ modoEdicion ? 'Guardar cambios' : 'Registrar venta' }}
+        </button>
+        <button class="btn-cancelar" @click="emit('close')">Cancelar</button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(36, 20, 16, 0.6);
   z-index: 1050;
   display: flex;
   align-items: center;
@@ -258,12 +254,13 @@ onMounted(() => {
 }
 
 .modal-panel {
-  background: #1a1512;
-  border: 1px solid rgba(196, 155, 99, 0.3);
+  background: #fbf6ef;
+  border: 1px solid #e8dcc8;
+  border-radius: 16px;
   width: 100%;
   max-width: 700px;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -272,28 +269,25 @@ onMounted(() => {
   max-width: 800px;
 }
 
-.modal-header-coffee {
-  padding: 28px 30px 16px;
+.modal-header {
+  padding: 24px 28px 12px;
   position: relative;
 }
 
 .subheading-sm {
   font-family: 'Great Vibes', cursive;
   font-size: 26px;
-  color: #c49b63;
+  color: #b0832b;
   display: block;
   line-height: 1;
-  margin-bottom: -6px;
+  margin-bottom: 2px;
 }
 
-.modal-header-coffee h3 {
-  font-family: 'Josefin Sans', Arial, sans-serif;
-  font-size: 22px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #fff;
+.modal-header h3 {
+  font-size: 19px;
+  color: #4a2c2a;
   margin: 0;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .close-btn {
@@ -302,89 +296,86 @@ onMounted(() => {
   right: 20px;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.4);
+  color: #a98a66;
   font-size: 16px;
   cursor: pointer;
-  transition: color 0.3s;
+  transition: color 0.2s;
   padding: 4px 8px;
 }
 
 .close-btn:hover {
-  color: #c49b63;
+  color: #6f4e37;
 }
 
-.gold-divider {
+.divider {
   height: 2px;
   background: linear-gradient(to right, #c49b63, rgba(196, 155, 99, 0.1));
-  margin: 0 30px;
+  margin: 0 28px;
 }
 
-.gold-divider-light {
+.divider-light {
   height: 1px;
-  background: linear-gradient(to right, #c49b63, rgba(196, 155, 99, 0.05));
-  margin: 0;
+  background: #f0e7d9;
+  margin: 22px 0;
 }
 
-.modal-body-coffee {
-  padding: 24px 30px;
+.modal-body {
+  padding: 20px 28px;
 }
 
 .section-title {
-  font-family: 'Josefin Sans', Arial, sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #c49b63;
-  margin: 0 0 20px 0;
-  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #6f4e37;
+  margin: 0 0 16px 0;
+  font-weight: 700;
+}
+
+.form-group {
+  margin-bottom: 16px;
 }
 
 .field-label {
   display: block;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 600;
+  color: #6f4e37;
   margin-bottom: 6px;
-  font-family: 'Work Sans', sans-serif;
 }
 
-.appointment-form .form-control {
-  border: transparent !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
-  height: 48px !important;
-  padding-left: 0;
-  background: transparent !important;
-  color: rgba(255, 255, 255, 0.9) !important;
+.control {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  background: #ffffff;
+  border: 1px solid #e8dcc8;
+  border-radius: 8px;
+  color: #4a2c2a;
   font-size: 14px;
-  border-radius: 0;
-  box-shadow: none !important;
-  transition: border-color 0.3s;
+  outline: none;
+  transition: border-color 0.25s;
+  box-sizing: border-box;
 }
 
-select.form-control {
+.control::placeholder {
+  color: #b5a48e;
+}
+
+.control:focus {
+  border-color: #c49b63;
+}
+
+select.control {
   cursor: pointer;
 }
 
-select.form-control option {
-  background: #1a1512;
-  color: #fff;
-}
-
-.appointment-form .form-control::placeholder {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-.appointment-form .form-control:focus,
-.appointment-form .form-control:active {
-  border-bottom-color: #c49b63 !important;
-  outline: none;
-}
-
+/* Fila agregar producto */
 .product-row {
   display: flex;
   gap: 12px;
-  align-items: flex-end;
+  align-items: center;
+  margin-bottom: 18px;
 }
 
 .product-select {
@@ -392,135 +383,159 @@ select.form-control option {
 }
 
 .quantity-input {
-  width: 100px;
+  width: 90px;
 }
 
-.add-btn {
-  height: 48px;
-  padding: 0 24px;
+.btn-agregar {
+  height: 44px;
+  padding: 0 22px;
   white-space: nowrap;
+  background: #6f4e37;
+  color: #fbf6ef;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s;
 }
 
-.cart-list-sm {
+.btn-agregar:hover {
+  background: #4a2c2a;
+}
+
+/* Tabla detalle */
+.cart-list {
   overflow-x: auto;
-  border: 1px solid rgba(196, 155, 99, 0.2);
-  margin-top: 20px;
+  background: #ffffff;
+  border: 1px solid #e8dcc8;
+  border-radius: 10px;
+  margin-bottom: 18px;
 }
 
-.table-sm {
+.tabla-detalle {
   width: 100%;
-  background: transparent;
+  border-collapse: collapse;
   font-size: 13px;
 }
 
-.table-sm thead th {
-  background: rgba(196, 155, 99, 0.1);
-  color: #c49b63;
-  font-family: 'Josefin Sans', Arial, sans-serif;
+.tabla-detalle thead th {
+  background: #4a2c2a;
+  color: #f3e5d5;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.04em;
   font-size: 11px;
-  padding: 12px 10px;
+  padding: 11px 12px;
   font-weight: 600;
   text-align: left;
 }
 
-.table-sm tbody td {
-  color: #cccccc;
-  padding: 12px 10px;
-  border-bottom: 1px solid rgba(196, 155, 99, 0.1);
+.tabla-detalle tbody td {
+  padding: 11px 12px;
+  border-bottom: 1px solid #f0e7d9;
 }
 
-.table-sm tbody td.product-name {
-  color: #fff;
-  font-weight: 500;
+.tabla-detalle tbody tr:last-child td {
+  border-bottom: none;
 }
 
-.text-gold {
-  color: #c49b63 !important;
+.c-nombre {
+  color: #4a2c2a;
   font-weight: 600;
+}
+.c-dato {
+  color: #7a6650;
+}
+.c-subtotal {
+  color: #3b6d11;
+  font-weight: 700;
+}
+
+.t-right {
+  text-align: right;
+}
+.t-center {
+  text-align: center;
 }
 
 .btn-remove {
   background: transparent;
-  border: 1px solid rgba(220, 53, 69, 0.5);
-  color: rgba(220, 53, 69, 0.7);
+  border: 1px solid #d8a08f;
+  color: #c0563a;
   width: 28px;
   height: 28px;
-  border-radius: 0;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 14px;
+  transition: all 0.2s ease;
+  font-size: 13px;
 }
 
 .btn-remove:hover {
-  background: #dc3545;
-  border-color: #dc3545;
+  background: #c0563a;
+  border-color: #c0563a;
   color: #fff;
 }
 
+/* Total */
 .total-box {
   text-align: right;
-  padding: 20px 0 10px;
-  border-top: 2px solid rgba(196, 155, 99, 0.2);
-  margin-top: 10px;
-  font-size: 18px;
-  font-family: 'Josefin Sans', Arial, sans-serif;
+  padding: 16px 0 6px;
+  border-top: 2px solid #e8dcc8;
+  margin-top: 6px;
+  font-size: 16px;
 }
 
 .total-box strong {
-  color: rgba(255, 255, 255, 0.7);
+  color: #7a6650;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-right: 15px;
+  letter-spacing: 0.05em;
+  margin-right: 14px;
 }
 
 .total-amount {
-  color: #c49b63;
-  font-size: 24px;
+  color: #3b6d11;
+  font-size: 22px;
   font-weight: 700;
 }
 
-.modal-footer-coffee {
-  padding: 16px 30px 28px;
+/* Footer */
+.modal-footer {
+  padding: 14px 28px 24px;
   display: flex;
-  align-items: center;
-  border-top: 1px solid rgba(196, 155, 99, 0.1);
+  gap: 12px;
+  border-top: 1px solid #f0e7d9;
 }
 
-.btn-primary {
-  background: #c49b63;
-  border: 1px solid #c49b63;
-  color: #000;
-  font-family: 'Josefin Sans', Arial, sans-serif;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border-radius: 0;
-  height: 44px;
-  transition: all 0.3s ease;
+.btn-guardar {
+  background: #6f4e37;
+  color: #fbf6ef;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s;
 }
 
-.btn-primary:hover {
+.btn-guardar:hover {
+  background: #4a2c2a;
+}
+
+.btn-cancelar {
   background: transparent;
-  color: #c49b63;
+  border: 1px solid #d8c6ad;
+  color: #7a6650;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
 }
 
-.btn-outline-white {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border-radius: 0;
-  height: 44px;
-  padding: 0 20px;
-  transition: all 0.3s ease;
-}
-
-.btn-outline-white:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-  color: #fff;
+.btn-cancelar:hover {
+  background: #f0e7d9;
+  color: #4a2c2a;
 }
 </style>

@@ -58,54 +58,50 @@ async function guardar() {
 <template>
   <div v-if="mostrar" class="modal-overlay" @click.self="emit('close')">
     <div class="modal-panel">
-      <div class="modal-header-coffee">
+      <div class="modal-header">
         <span class="subheading-sm">Cafetería</span>
-        <h3>{{ modoEdicion ? 'Editar Categoría' : 'Nueva Categoría' }}</h3>
+        <h3>{{ modoEdicion ? 'Editar categoría' : 'Nueva categoría' }}</h3>
         <button class="close-btn" @click="emit('close')">✕</button>
       </div>
 
-      <div class="gold-divider"></div>
+      <div class="divider"></div>
 
-      <div class="modal-body-coffee">
-        <div v-if="error" class="error-msg mb-3">{{ error }}</div>
+      <div class="modal-body">
+        <div v-if="error" class="error-msg">{{ error }}</div>
 
-        <div class="appointment-form">
-          <div class="form-group mb-4">
-            <label class="field-label">Nombre</label>
-            <input
-              v-model="form.nombre"
-              class="form-control"
-              placeholder="Ej: Bebidas calientes"
-              :class="{ 'is-invalid': error && !form.nombre.trim() }"
-            />
-          </div>
+        <div class="form-group">
+          <label class="field-label">Nombre</label>
+          <input
+            v-model="form.nombre"
+            class="control"
+            placeholder="Ej: Bebidas calientes"
+            :class="{ 'is-invalid': error && !form.nombre.trim() }"
+          />
+        </div>
 
-          <div class="form-group mb-4">
-            <label class="field-label">Descripción</label>
-            <input
-              v-model="form.descripcion"
-              class="form-control"
-              placeholder="Descripción opcional"
-            />
-          </div>
+        <div class="form-group">
+          <label class="field-label">Descripción</label>
+          <input v-model="form.descripcion" class="control" placeholder="Descripción opcional" />
         </div>
       </div>
 
-      <div class="modal-footer-coffee">
-        <button class="btn btn-primary px-4" :disabled="loading" @click="guardar">
-          <span>{{ loading ? 'Guardando...' : 'Guardar' }}</span>
+      <div class="modal-footer">
+        <button class="btn-guardar" :disabled="loading" @click="guardar">
+          {{ loading ? 'Guardando...' : 'Guardar' }}
         </button>
-        <button class="btn btn-outline-white ml-3" @click="emit('close')">Cancelar</button>
+        <button class="btn-cancelar" @click="emit('close')">Cancelar</button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(36, 20, 16, 0.6);
   z-index: 1050;
   display: flex;
   align-items: center;
@@ -114,148 +110,153 @@ async function guardar() {
 }
 
 .modal-panel {
-  background: #1a1512;
-  border: 1px solid rgba(196, 155, 99, 0.3);
+  background: #fbf6ef;
+  border: 1px solid #e8dcc8;
+  border-radius: 16px;
   width: 100%;
   max-width: 460px;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
 }
 
-.modal-header-coffee {
-  padding: 28px 30px 16px;
+.modal-header {
+  padding: 24px 28px 12px;
   position: relative;
 }
+
 .subheading-sm {
   font-family: 'Great Vibes', cursive;
   font-size: 26px;
-  color: #c49b63;
+  color: #b0832b;
   display: block;
   line-height: 1;
-  margin-bottom: -6px;
+  margin-bottom: 2px;
 }
-.modal-header-coffee h3 {
-  font-family: 'Josefin Sans', Arial, sans-serif;
-  font-size: 22px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #fff;
+
+.modal-header h3 {
+  font-size: 20px;
+  color: #4a2c2a;
   margin: 0;
-  font-weight: 700;
+  font-weight: 600;
 }
+
 .close-btn {
   position: absolute;
   top: 20px;
   right: 20px;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.4);
+  color: #a98a66;
   font-size: 16px;
   cursor: pointer;
-  transition: color 0.3s;
+  transition: color 0.2s;
   padding: 4px 8px;
 }
+
 .close-btn:hover {
-  color: #c49b63;
+  color: #6f4e37;
 }
 
-.gold-divider {
+.divider {
   height: 2px;
   background: linear-gradient(to right, #c49b63, rgba(196, 155, 99, 0.1));
-  margin: 0 30px;
+  margin: 0 28px;
 }
 
-.modal-body-coffee {
-  padding: 24px 30px;
+.modal-body {
+  padding: 20px 28px;
+}
+
+.form-group {
+  margin-bottom: 16px;
 }
 
 .field-label {
   display: block;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 600;
+  color: #6f4e37;
   margin-bottom: 6px;
-  font-family: 'Work Sans', sans-serif;
 }
 
-.appointment-form .form-control {
-  border: transparent !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
-  height: 48px !important;
-  padding-left: 0;
-  background: transparent !important;
-  color: rgba(255, 255, 255, 0.9) !important;
+.control {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  background: #ffffff;
+  border: 1px solid #e8dcc8;
+  border-radius: 8px;
+  color: #4a2c2a;
   font-size: 14px;
-  border-radius: 0;
-  box-shadow: none !important;
-  transition: border-color 0.3s;
-}
-.appointment-form .form-control::placeholder {
-  color: rgba(255, 255, 255, 0.25);
-}
-.appointment-form .form-control:focus,
-.appointment-form .form-control:active {
-  border-bottom-color: #c49b63 !important;
   outline: none;
+  transition: border-color 0.25s;
+  box-sizing: border-box;
 }
-.appointment-form .form-control.is-invalid {
-  border-bottom-color: #dc3545 !important;
+
+.control::placeholder {
+  color: #b5a48e;
+}
+
+.control:focus {
+  border-color: #c49b63;
+}
+
+.control.is-invalid {
+  border-color: #c0563a;
 }
 
 .error-msg {
-  background: rgba(220, 53, 69, 0.12);
-  border-left: 3px solid #dc3545;
-  color: #f5a0a8;
+  background: #fbeaea;
+  border-left: 3px solid #c0563a;
+  color: #a32d2d;
   font-size: 13px;
-  padding: 8px 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
 }
 
-.modal-footer-coffee {
-  padding: 16px 30px 28px;
+.modal-footer {
+  padding: 14px 28px 24px;
   display: flex;
-  align-items: center;
-  border-top: 1px solid rgba(196, 155, 99, 0.1);
+  gap: 12px;
+  border-top: 1px solid #f0e7d9;
 }
 
-.btn-primary {
-  background: #c49b63;
-  border: 1px solid #c49b63;
-  color: #000;
-  font-family: 'Josefin Sans', Arial, sans-serif;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border-radius: 0;
-  height: 44px;
-  transition: all 0.3s ease;
+.btn-guardar {
+  background: #6f4e37;
+  color: #fbf6ef;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s;
 }
-.btn-primary:hover:not(:disabled) {
-  background: transparent;
-  color: #c49b63;
+
+.btn-guardar:hover:not(:disabled) {
+  background: #4a2c2a;
 }
-.btn-primary:disabled {
-  opacity: 0.5;
+
+.btn-guardar:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
 }
-.btn-primary span {
-  color: inherit;
+
+.btn-cancelar {
+  background: transparent;
+  border: 1px solid #d8c6ad;
+  color: #7a6650;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
 }
 
-.btn-outline-white {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border-radius: 0;
-  height: 44px;
-  padding: 0 20px;
-  transition: all 0.3s ease;
-}
-.btn-outline-white:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-  color: #fff;
+.btn-cancelar:hover {
+  background: #f0e7d9;
+  color: #4a2c2a;
 }
 </style>

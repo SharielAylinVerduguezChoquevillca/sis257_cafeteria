@@ -27,7 +27,7 @@ export class CreateProductoDto {
   @IsString()
   descripcion?: string;
 
-  @ApiProperty({ example: 15.50 })
+  @ApiProperty({ example: 15.5 })
   @IsNotEmpty()
   @IsNumber()
   @IsPositive()
@@ -43,4 +43,10 @@ export class CreateProductoDto {
   @IsOptional()
   @IsBoolean()
   activo?: boolean;
+
+  @ApiPropertyOptional({ example: 'https://ejemplo.com/cafe.jpg' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  imagen?: string;
 }

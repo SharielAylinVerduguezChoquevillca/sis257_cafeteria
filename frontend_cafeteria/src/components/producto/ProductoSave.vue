@@ -22,14 +22,12 @@ const form = ref<Producto>({
   precio: 0,
   stock: 0,
   activo: true,
+  imagen: '',
 })
 
 function setForm() {
   if (props.producto) {
     const idCat = Number(props.producto.idCategoria || props.producto.categoria?.id || 0)
-    console.log('producto:', props.producto)
-    console.log('idCategoria calculado:', idCat)
-    console.log('categorias disponibles:', categorias.value)
     form.value = {
       id: props.producto.id,
       idCategoria: idCat,
@@ -38,6 +36,18 @@ function setForm() {
       precio: Number(props.producto.precio),
       stock: Number(props.producto.stock),
       activo: props.producto.activo ?? true,
+      imagen: props.producto.imagen || '',
+    }
+  } else {
+    form.value = {
+      id: 0,
+      idCategoria: 0,
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      stock: 0,
+      activo: true,
+      imagen: '',
     }
   }
 }
@@ -66,6 +76,7 @@ async function guardar() {
     precio: Number(form.value.precio),
     stock: Number(form.value.stock),
     activo: form.value.activo,
+    imagen: form.value.imagen,
   }
   if (props.modoEdicion) {
     await axios.patch(`/productos/${form.value.id}`, data)
@@ -84,82 +95,81 @@ onMounted(async () => {
 <template>
   <div v-if="mostrar" class="modal-overlay" @click.self="emit('close')">
     <div class="modal-panel">
-      <div class="modal-header-coffee">
+      <div class="modal-header">
         <span class="subheading-sm">Cafetería</span>
-        <h3>{{ modoEdicion ? 'Editar Producto' : 'Nuevo Producto' }}</h3>
+        <h3>{{ modoEdicion ? 'Editar producto' : 'Nuevo producto' }}</h3>
         <button class="close-btn" @click="emit('close')">✕</button>
       </div>
 
-      <div class="gold-divider"></div>
+      <div class="divider"></div>
 
-      <div class="modal-body-coffee">
-        <div class="appointment-form">
-          <div class="form-group mb-3">
-            <label class="field-label">Categoría</label>
-            <select
-              v-model.number="form.idCategoria"
-              class="form-control"
-              style="background-color: #1a1512 !important; color: white !important"
-            >
-              <option :value="0">Seleccione una categoría</option>
-              <option v-for="cat in categorias" :key="cat.id" :value="cat.id">
-                {{ cat.nombre }}
-              </option>
-            </select>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="field-label">Categoría</label>
+          <select v-model.number="form.idCategoria" class="control">
+            <option :value="0">Seleccione una categoría</option>
+            <option v-for="cat in categorias" :key="cat.id" :value="cat.id">
+              {{ cat.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="field-label">Nombre</label>
+          <input v-model="form.nombre" class="control" placeholder="Nombre del producto" />
+        </div>
+
+        <div class="form-group">
+          <label class="field-label">Descripción</label>
+          <input v-model="form.descripcion" class="control" placeholder="Descripción (opcional)" />
+        </div>
+
+        <div class="form-group">
+          <label class="field-label">Imagen (URL)</label>
+          <input
+            v-model="form.imagen"
+            class="control"
+            placeholder="https://ejemplo.com/cafe.jpg"
+          />
+          <div v-if="form.imagen" class="preview-wrap">
+            <img :src="form.imagen" alt="Vista previa" class="preview-img" />
           </div>
+        </div>
 
-          <div class="form-group mb-3">
-            <label class="field-label">Nombre</label>
-            <input v-model="form.nombre" class="form-control" placeholder="Nombre del producto" />
-          </div>
-
-          <div class="form-group mb-3">
-            <label class="field-label">Descripción</label>
-            <input
-              v-model="form.descripcion"
-              class="form-control"
-              placeholder="Descripción (opcional)"
-            />
-          </div>
-
-          <div class="form-group mb-3">
+        <div class="form-row">
+          <div class="form-group">
             <label class="field-label">Precio (Bs.)</label>
-            <input
-              v-model="form.precio"
-              type="number"
-              step="0.01"
-              class="form-control"
-              placeholder="0.00"
-            />
+            <input v-model="form.precio" type="number" step="0.01" class="control" placeholder="0.00" />
           </div>
-
-          <div class="form-group mb-3">
+          <div class="form-group">
             <label class="field-label">Stock</label>
-            <input v-model="form.stock" type="number" class="form-control" placeholder="0" />
+            <input v-model="form.stock" type="number" class="control" placeholder="0" />
           </div>
+        </div>
 
-          <div class="form-group mb-3">
-            <label class="field-label" style="display: flex; align-items: center; gap: 10px">
-              <input v-model="form.activo" type="checkbox" style="width: auto; margin: 0" />
-              Activo
-            </label>
-          </div>
+        <div class="form-group">
+          <label class="check-label">
+            <input v-model="form.activo" type="checkbox" />
+            Activo
+          </label>
         </div>
       </div>
 
-      <div class="modal-footer-coffee">
-        <button class="btn btn-primary px-4" @click="guardar">Guardar</button>
-        <button class="btn btn-outline-white ml-3" @click="emit('close')">Cancelar</button>
+      <div class="modal-footer">
+        <button class="btn-guardar" @click="guardar">Guardar</button>
+        <button class="btn-cancelar" @click="emit('close')">Cancelar</button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(36, 20, 16, 0.6);
   z-index: 1050;
   display: flex;
   align-items: center;
@@ -168,36 +178,36 @@ onMounted(async () => {
 }
 
 .modal-panel {
-  background: #1a1512;
-  border: 1px solid rgba(196, 155, 99, 0.3);
+  background: #fbf6ef;
+  border: 1px solid #e8dcc8;
+  border-radius: 16px;
   width: 100%;
-  max-width: 460px;
+  max-width: 470px;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
-.modal-header-coffee {
-  padding: 28px 30px 16px;
+.modal-header {
+  padding: 24px 28px 12px;
   position: relative;
 }
 
 .subheading-sm {
   font-family: 'Great Vibes', cursive;
   font-size: 26px;
-  color: #c49b63;
+  color: #b0832b;
   display: block;
   line-height: 1;
-  margin-bottom: -6px;
+  margin-bottom: 2px;
 }
 
-.modal-header-coffee h3 {
-  font-family: 'Josefin Sans', Arial, sans-serif;
-  font-size: 22px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #fff;
+.modal-header h3 {
+  font-size: 20px;
+  color: #4a2c2a;
   margin: 0;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .close-btn {
@@ -206,114 +216,142 @@ onMounted(async () => {
   right: 20px;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.4);
+  color: #a98a66;
   font-size: 16px;
   cursor: pointer;
-  transition: color 0.3s;
+  transition: color 0.2s;
   padding: 4px 8px;
 }
 
 .close-btn:hover {
-  color: #c49b63;
+  color: #6f4e37;
 }
 
-.gold-divider {
+.divider {
   height: 2px;
   background: linear-gradient(to right, #c49b63, rgba(196, 155, 99, 0.1));
-  margin: 0 30px;
+  margin: 0 28px;
 }
 
-.modal-body-coffee {
-  padding: 24px 30px;
+.modal-body {
+  padding: 20px 28px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 14px;
+}
+
+.form-row .form-group {
+  flex: 1;
 }
 
 .field-label {
   display: block;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 600;
+  color: #6f4e37;
   margin-bottom: 6px;
-  font-family: 'Work Sans', sans-serif;
 }
 
-.appointment-form .form-control {
-  border: transparent !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
-  height: 42px !important;
-  padding-left: 0;
-  background: transparent !important;
-  color: rgba(255, 255, 255, 0.9) !important;
+.control {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  background: #ffffff;
+  border: 1px solid #e8dcc8;
+  border-radius: 8px;
+  color: #4a2c2a;
   font-size: 14px;
-  border-radius: 0;
-  box-shadow: none !important;
-  transition: border-color 0.3s;
+  outline: none;
+  transition: border-color 0.25s;
+  box-sizing: border-box;
 }
 
-select.form-control {
+.control::placeholder {
+  color: #b5a48e;
+}
+
+.control:focus {
+  border-color: #c49b63;
+}
+
+select.control {
   cursor: pointer;
 }
 
-select.form-control option {
-  background: #1a1512;
-  color: #fff;
+/* Preview de imagen */
+.preview-wrap {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
 }
 
-.appointment-form .form-control::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+.preview-img {
+  max-width: 120px;
+  max-height: 120px;
+  border-radius: 10px;
+  border: 1px solid #e8dcc8;
+  object-fit: cover;
 }
 
-.appointment-form .form-control:focus,
-.appointment-form .form-control:active {
-  border-bottom-color: #c49b63 !important;
-  outline: none;
-}
-
-.modal-footer-coffee {
-  padding: 16px 30px 28px;
+/* Checkbox */
+.check-label {
   display: flex;
   align-items: center;
-  border-top: 1px solid rgba(196, 155, 99, 0.1);
+  gap: 10px;
+  font-size: 14px;
+  color: #4a2c2a;
+  cursor: pointer;
 }
 
-.btn-primary {
-  background: #c49b63;
-  border: 1px solid #c49b63;
-  color: #000;
-  font-family: 'Josefin Sans', Arial, sans-serif;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border-radius: 0;
-  height: 40px;
-  transition: all 0.3s ease;
+.check-label input {
+  width: 16px;
+  height: 16px;
+  accent-color: #6f4e37;
 }
 
-.btn-primary:hover {
+.modal-footer {
+  padding: 14px 28px 24px;
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid #f0e7d9;
+}
+
+.btn-guardar {
+  background: #6f4e37;
+  color: #fbf6ef;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+
+.btn-guardar:hover {
+  background: #4a2c2a;
+}
+
+.btn-cancelar {
   background: transparent;
-  color: #c49b63;
+  border: 1px solid #d8c6ad;
+  color: #7a6650;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
 }
 
-.btn-outline-white {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border-radius: 0;
-  height: 40px;
-  padding: 0 20px;
-  transition: all 0.3s ease;
-}
-
-.btn-outline-white:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-  color: #fff;
-}
-select.form-control {
-  -webkit-appearance: auto !important;
-  appearance: auto !important;
-  background-color: #1a1512 !important;
+.btn-cancelar:hover {
+  background: #f0e7d9;
+  color: #4a2c2a;
 }
 </style>
