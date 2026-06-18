@@ -1,5 +1,6 @@
 import type { Cliente } from './cliente'
 import type { Usuario } from './usuario'
+import type { DetalleVenta } from './detalleVenta'
 
 export interface Venta {
   id: number
@@ -10,4 +11,5 @@ export interface Venta {
   fecha?: string
   total: number
   observacion?: string
+  detalles?: DetalleVenta[]
 }

@@ -17,18 +17,21 @@ const error = ref('')
 const form = ref<Cliente>({
   id: 0,
   nombre: '',
-  ci: '',
+  nit: '',
   telefono: '',
 })
 
 watch(
-  () => props.cliente,
+  () => props.mostrar,
   (val) => {
-    if (val) {
-      form.value = { ...val }
+    if (!val) return
+
+    if (props.cliente) {
+      form.value = { ...props.cliente }
     } else {
-      form.value = { id: 0, nombre: '', ci: '', telefono: '' }
+      resetForm()
     }
+
     error.value = ''
   },
 )
@@ -38,10 +41,6 @@ async function guardar() {
     error.value = 'El nombre es obligatorio'
     return
   }
-  if (!form.value.ci.trim()) {
-    error.value = 'El carnet de identidad es obligatorio'
-    return
-  }
 
   try {
     loading.value = true
@@ -49,19 +48,34 @@ async function guardar() {
     if (props.modoEdicion) {
       await axios.patch(`/clientes/${form.value.id}`, form.value)
     } else {
-      await axios.post('/clientes', form.value)
+      const payload = {
+        nombre: form.value.nombre.trim(),
+        telefono: form.value.telefono?.trim() || null,
+        nit: form.value.nit?.trim() || undefined,
+      }
+
+      await axios.post('/clientes', payload)
     }
     emit('guardar')
     emit('close')
   } catch (err: any) {
     if (err.response?.status === 409) {
-      error.value = 'Ya existe un cliente con este CI'
+      error.value = 'Ya existe un cliente con este NIT'
     } else {
       error.value = 'Ocurrió un error al guardar. Intente de nuevo.'
     }
   } finally {
     loading.value = false
   }
+}
+function resetForm() {
+  form.value = {
+    id: 0,
+    nombre: '',
+    nit: '',
+    telefono: '',
+  }
+  error.value = ''
 }
 </script>
 
@@ -90,17 +104,16 @@ async function guardar() {
         </div>
 
         <div class="form-group">
-          <label class="field-label">Carnet de identidad</label>
+          <label class="field-label">NIT (opcional)</label>
           <input
-            v-model="form.ci"
+            v-model="form.nit"
             class="control"
-            placeholder="Ej: 1234567"
-            :class="{ 'is-invalid': error && !form.ci.trim() }"
+            placeholder="Ej: 1234567 (solo si requiere factura)"
           />
         </div>
 
         <div class="form-group">
-          <label class="field-label">Teléfono</label>
+          <label class="field-label">Teléfono (opcional)</label>
           <input v-model="form.telefono" class="control" placeholder="Ej: 71234567 (opcional)" />
         </div>
       </div>

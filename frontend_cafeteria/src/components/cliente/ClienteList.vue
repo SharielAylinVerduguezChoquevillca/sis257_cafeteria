@@ -28,17 +28,19 @@ const busqueda = ref('')
 
 const clientesFiltrados = computed(() => {
   if (!busqueda.value) return clientes.value
-  return clientes.value.filter(
-    (c) =>
+
+  return clientes.value.filter((c) => {
+    return (
       c.nombre.toLowerCase().includes(busqueda.value.toLowerCase()) ||
-      c.ci.toLowerCase().includes(busqueda.value.toLowerCase()),
-  )
+      (c.nit ?? '').toLowerCase().includes(busqueda.value.toLowerCase())
+    )
+  })
 })
 </script>
 
 <template>
   <div>
-    <input v-model="busqueda" class="buscador" placeholder="Buscar cliente o CI..." />
+    <input v-model="busqueda" class="buscador" placeholder="Buscar cliente o NIT..." />
 
     <div class="tabla-wrapper">
       <table class="tabla">
@@ -46,7 +48,7 @@ const clientesFiltrados = computed(() => {
           <tr>
             <th style="width: 60px">#</th>
             <th>Nombre</th>
-            <th>CI</th>
+            <th>NIT</th>
             <th>Teléfono</th>
             <th class="t-center" style="width: 180px">Acciones</th>
           </tr>
@@ -60,7 +62,7 @@ const clientesFiltrados = computed(() => {
           <tr v-for="(cliente, index) in clientesFiltrados" :key="cliente.id">
             <td class="c-num">{{ index + 1 }}</td>
             <td class="c-nombre">{{ cliente.nombre }}</td>
-            <td class="c-dato">{{ cliente.ci }}</td>
+            <td class="c-dato">{{ cliente.nit || '—' }}</td>
             <td class="c-dato">{{ cliente.telefono || '—' }}</td>
             <td class="t-center">
               <button class="btn-editar" @click="emit('edit', cliente)">Editar</button>

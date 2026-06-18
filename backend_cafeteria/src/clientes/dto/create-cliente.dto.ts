@@ -8,11 +8,11 @@ export class CreateClienteDto {
   @MaxLength(100)
   nombre: string;
 
-  @ApiProperty({ example: '12345678' })
-  @IsNotEmpty()
+  @ApiPropertyOptional({ example: '12345678' })
+  @IsOptional()
   @IsString()
   @MaxLength(20)
-  ci: string;
+  nit?: string;
 
   @ApiPropertyOptional({ example: '70012345' })
   @IsOptional()

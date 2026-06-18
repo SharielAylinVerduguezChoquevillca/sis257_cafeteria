@@ -17,8 +17,8 @@ export class Cliente {
   @Column({ type: 'varchar', length: 100, nullable: false })
   nombre: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: false })
-  ci: string;
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  nit: string;
 
   @Column({ type: 'varchar', length: 20, nullable: true })
   telefono: string;
