@@ -67,6 +67,13 @@ function handleLogout() {
           </RouterLink>
         </li>
 
+        <li class="mt-0.5 w-full" v-if="authStore.esAdmin()">
+          <RouterLink to="/usuarios" class="nav-link">
+            <i class="nav-icon ni ni-badge"></i>
+            <span class="duration-300 opacity-100 pointer-events-none ease">Usuarios</span>
+          </RouterLink>
+        </li>
+
 
         <li class="w-full mt-4 mb-1">
           <h6 class="sidebar-section">Cuenta</h6>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, nextTick } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import axios from '@/plugins/axios'
 import type { Usuario } from '../../models/usuario'
 
@@ -11,13 +11,13 @@ const props = defineProps<{
 
 const emit = defineEmits(['guardar', 'close'])
 
-const form = ref<Usuario>({
+const form = ref({
   id: 0,
   nombre: '',
   email: '',
   password: '',
+  rol: 'cajero',
   activo: true,
-  rol: 'USER'
 })
 
 function setForm() {
@@ -26,9 +26,9 @@ function setForm() {
       id: props.usuario.id,
       nombre: props.usuario.nombre,
       email: props.usuario.email,
-      password: '',
+      password: '', // vacío al editar: solo se cambia si escriben algo
+      rol: props.usuario.rol || 'cajero',
       activo: props.usuario.activo ?? true,
-      rol: props.usuario.rol || 'USER'
     }
   } else {
     form.value = {
@@ -36,35 +36,55 @@ function setForm() {
       nombre: '',
       email: '',
       password: '',
+      rol: 'cajero',
       activo: true,
-      rol: 'USER'
     }
   }
 }
 
 watch(
-  () => props.mostrar,
-  async (val) => {
+  () => [props.mostrar, props.usuario],
+  async ([val]) => {
     if (val) {
       await nextTick()
       setForm()
     }
   },
+  { immediate: true },
 )
 
 async function guardar() {
-  const data = {
-    nombre: form.value.nombre,
-    email: form.value.email,
-    password: form.value.password,
-    activo: form.value.activo,
-    rol: form.value.rol
+  // Validación básica
+  if (!form.value.nombre || !form.value.email) {
+    alert('Nombre y email son obligatorios')
+    return
+  }
+  if (!props.modoEdicion && !form.value.password) {
+    alert('La contraseña es obligatoria al crear un usuario')
+    return
   }
 
   if (props.modoEdicion) {
+    // Al editar: armamos el objeto sin password si está vacío
+    const data: any = {
+      nombre: form.value.nombre,
+      email: form.value.email,
+      rol: form.value.rol,
+      activo: form.value.activo,
+    }
+    if (form.value.password) {
+      data.password = form.value.password
+    }
     await axios.patch(`/usuarios/${form.value.id}`, data)
   } else {
-    await axios.post('/usuarios', data)
+    // Al crear: enviamos todo
+    await axios.post('/usuarios', {
+      nombre: form.value.nombre,
+      email: form.value.email,
+      password: form.value.password,
+      rol: form.value.rol,
+      activo: form.value.activo,
+    })
   }
   emit('guardar')
   emit('close')
@@ -85,32 +105,42 @@ async function guardar() {
       <div class="modal-body">
         <div class="form-group">
           <label class="field-label">Nombre</label>
-          <input v-model="form.nombre" class="control" placeholder="Nombre completo" />
+          <input v-model="form.nombre" class="control" placeholder="Nombre completo" autocomplete="off" />
         </div>
 
         <div class="form-group">
           <label class="field-label">Email</label>
-          <input v-model="form.email" type="email" class="control" placeholder="correo@ejemplo.com" />
+          <input v-model="form.email" type="email" class="control" placeholder="correo@cafeteria.com" autocomplete="off" />
         </div>
 
         <div class="form-group">
-          <label class="field-label">{{ modoEdicion ? 'Nueva contraseña (opcional)' : 'Contraseña' }}</label>
-          <input v-model="form.password" type="password" class="control" placeholder="********" />
-        </div>
-
-        <div class="form-group">
-          <label class="field-label">Rol</label>
-          <select v-model="form.rol" class="control">
-            <option value="USER">Usuario</option>
-            <option value="ADMIN">Administrador</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="check-label">
-            <input v-model="form.activo" type="checkbox" />
-            Usuario activo
+          <label class="field-label">
+            Contraseña
+            <span v-if="modoEdicion" class="hint">(dejar vacío para no cambiarla)</span>
           </label>
+          <input
+            v-model="form.password"
+            type="password"
+            class="control"
+            autocomplete="new-password"
+            :placeholder="modoEdicion ? '••••••' : 'Mínimo 6 caracteres'"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="field-label">Rol</label>
+            <select v-model="form.rol" class="control">
+              <option value="cajero">Cajero</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+          <div class="form-group check-col">
+            <label class="check-label">
+              <input v-model="form.activo" type="checkbox" />
+              Activo
+            </label>
+          </div>
         </div>
       </div>
 
@@ -200,12 +230,33 @@ async function guardar() {
   margin-bottom: 16px;
 }
 
+.form-row {
+  display: flex;
+  gap: 14px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.check-col {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 10px;
+}
+
 .field-label {
   display: block;
   font-size: 12px;
   font-weight: 600;
   color: #6f4e37;
   margin-bottom: 6px;
+}
+
+.hint {
+  font-weight: 400;
+  font-size: 11px;
+  color: #a98a66;
 }
 
 .control {

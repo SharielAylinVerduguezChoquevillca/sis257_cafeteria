@@ -7,7 +7,7 @@ const usuarios = ref<Usuario[]>([])
 const emit = defineEmits(['edit'])
 
 const paginaActual = ref(1)
-const productosPorPagina = ref(5)
+const itemsPorPagina = ref(5)
 
 async function obtenerLista() {
   const response = await axios.get('/usuarios')
@@ -41,13 +41,13 @@ const usuariosFiltrados = computed(() => {
 const totalFiltrados = computed(() => usuariosFiltrados.value.length)
 
 const usuariosPaginados = computed(() => {
-  const inicio = (paginaActual.value - 1) * productosPorPagina.value
-  const fin = inicio + productosPorPagina.value
+  const inicio = (paginaActual.value - 1) * itemsPorPagina.value
+  const fin = inicio + itemsPorPagina.value
   return usuariosFiltrados.value.slice(inicio, fin)
 })
 
 const totalPaginas = computed(() => {
-  return Math.ceil(totalFiltrados.value / productosPorPagina.value)
+  return Math.ceil(totalFiltrados.value / itemsPorPagina.value)
 })
 
 watch(busqueda, () => {
@@ -92,10 +92,10 @@ function obtenerRangoPaginas() {
       <table class="tabla">
         <thead>
           <tr>
-            <th style="width: 60px">#</th>
+            <th style="width: 50px">#</th>
             <th>Nombre</th>
             <th>Email</th>
-            <th>Rol</th>
+            <th class="t-center">Rol</th>
             <th class="t-center">Activo</th>
             <th class="t-center" style="width: 180px">Acciones</th>
           </tr>
@@ -106,23 +106,25 @@ function obtenerRangoPaginas() {
             <td colspan="6" class="vacio">No hay usuarios registrados</td>
           </tr>
 
-          <tr v-for="(usuario, index) in usuariosPaginados" :key="usuario.id">
-            <td class="c-num">{{ (paginaActual - 1) * productosPorPagina + index + 1 }}</td>
+          <tr v-for="(usuario, index) in usuariosPaginados" :key="usuario.id" class="fila-usuario">
+            <td class="c-num">{{ (paginaActual - 1) * itemsPorPagina + index + 1 }}</td>
             <td class="c-nombre">{{ usuario.nombre }}</td>
             <td class="c-dato">{{ usuario.email }}</td>
-            <td class="c-dato">
-              <span class="badge-rol" :class="usuario.rol === 'ADMIN' ? 'rol-admin' : 'rol-user'">
-                {{ usuario.rol || 'Usuario' }}
+            <td class="t-center">
+              <span class="badge-rol" :class="usuario.rol === 'admin' ? 'rol-admin' : 'rol-cajero'">
+                {{ usuario.rol === 'admin' ? 'Administrador' : 'Cajero' }}
               </span>
             </td>
             <td class="t-center">
-              <span class="badge" :class="usuario.activo ? 'badge-si' : 'badge-no'">
+              <span :class="usuario.activo ? 'activo-si' : 'activo-no'">
                 {{ usuario.activo ? 'Sí' : 'No' }}
               </span>
             </td>
             <td class="t-center">
-              <button class="btn-editar" @click="emit('edit', usuario)">Editar</button>
-              <button class="btn-eliminar" @click="eliminar(usuario.id)">Eliminar</button>
+              <div class="acciones">
+                <button class="btn-editar" @click="emit('edit', usuario)">Editar</button>
+                <button class="btn-eliminar" @click="eliminar(usuario.id)">Eliminar</button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -131,8 +133,8 @@ function obtenerRangoPaginas() {
 
     <div v-if="totalFiltrados > 0" class="paginacion">
       <div class="paginacion-info">
-        Mostrando {{ (paginaActual - 1) * productosPorPagina + 1 }} -
-        {{ Math.min(paginaActual * productosPorPagina, totalFiltrados) }}
+        Mostrando {{ (paginaActual - 1) * itemsPorPagina + 1 }} -
+        {{ Math.min(paginaActual * itemsPorPagina, totalFiltrados) }}
         de {{ totalFiltrados }} usuarios
       </div>
 
@@ -149,7 +151,7 @@ function obtenerRangoPaginas() {
           v-for="pagina in obtenerRangoPaginas()"
           :key="pagina"
           class="btn-pagina"
-          :class="{ 'activo': pagina === paginaActual }"
+          :class="{ activo: pagina === paginaActual }"
           @click="irPagina(pagina)"
         >
           {{ pagina }}
@@ -165,7 +167,7 @@ function obtenerRangoPaginas() {
       </div>
 
       <div class="paginacion-items">
-        <span class="texto-items">{{ productosPorPagina }} por página</span>
+        <span class="texto-items">{{ itemsPorPagina }} por página</span>
       </div>
     </div>
   </div>
@@ -202,7 +204,7 @@ function obtenerRangoPaginas() {
 
 .tabla {
   width: 100%;
-  min-width: 600px;
+  min-width: 700px;
   border-collapse: collapse;
   font-size: 13.5px;
 }
@@ -221,17 +223,17 @@ function obtenerRangoPaginas() {
   text-align: left;
 }
 
-.tabla tbody td {
+.fila-usuario td {
   padding: 14px 14px;
   border-bottom: 1px solid #f0e7d9;
   vertical-align: middle;
 }
 
-.tabla tbody tr:nth-child(even) {
+.fila-usuario:nth-of-type(odd) {
   background: #fcf7f0;
 }
 
-.tabla tbody tr:hover {
+.fila-usuario:hover {
   background: #f6ece0;
 }
 
@@ -253,6 +255,39 @@ function obtenerRangoPaginas() {
   text-align: center;
 }
 
+.badge-rol {
+  display: inline-block;
+  padding: 3px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 1px solid;
+  border-radius: 20px;
+}
+
+.rol-admin {
+  color: #185fa5;
+  border-color: #185fa5;
+  background: rgba(24, 95, 165, 0.08);
+}
+
+.rol-cajero {
+  color: #0f6e56;
+  border-color: #0f6e56;
+  background: rgba(15, 110, 86, 0.08);
+}
+
+.activo-si {
+  color: #3b6d11;
+  font-weight: 600;
+}
+
+.activo-no {
+  color: #c0563a;
+  font-weight: 600;
+}
+
 .vacio {
   text-align: center;
   padding: 2.5rem 1rem;
@@ -262,40 +297,10 @@ function obtenerRangoPaginas() {
   text-transform: uppercase;
 }
 
-.badge {
-  display: inline-block;
-  padding: 3px 14px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.badge-si {
-  background: #eaf3de;
-  color: #3b6d11;
-}
-
-.badge-no {
-  background: #fbeaea;
-  color: #a32d2d;
-}
-
-.badge-rol {
-  display: inline-block;
-  padding: 3px 14px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.rol-admin {
-  background: #e8dcc8;
-  color: #6f4e37;
-}
-
-.rol-user {
-  background: #f0e7d9;
-  color: #7a6650;
+.acciones {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
 
 .btn-editar,
@@ -306,7 +311,6 @@ function obtenerRangoPaginas() {
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin: 0 2px;
 }
 
 .btn-editar {

@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsEmail,
+  IsIn,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -27,6 +28,12 @@ export class CreateUsuarioDto {
   @IsString()
   @MinLength(6)
   password: string;
+
+  @ApiProperty({ example: 'cajero', enum: ['admin', 'cajero'] })
+  @IsNotEmpty()
+  @IsString()
+  @IsIn(['admin', 'cajero'])
+  rol: string;
 
   @ApiProperty({ example: true })
   @IsOptional()
