@@ -33,7 +33,7 @@ async function handleLogin() {
       <div class="login-card">
         <div class="login-header">
           <div class="login-logo">
-            <img src="/src/assets/img/logo.png" alt="Logo El Buen Gusto" class="logo-img" />
+            <img src="/src/assets/img/logo.1.png" alt="Logo El Buen Gusto" class="logo-img" />
           </div>
           <h1 class="brand">El Buen Gusto</h1>
           <p class="subtitle">Sistema de gestión</p>
@@ -136,7 +136,7 @@ async function handleLogin() {
   border-radius: 16px;
   padding: 38px 34px;
   border: 1px solid rgba(196, 155, 99, 0.35);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 24px 100px rgba(0, 0, 0, 0.45);
 }
 
 .login-header {

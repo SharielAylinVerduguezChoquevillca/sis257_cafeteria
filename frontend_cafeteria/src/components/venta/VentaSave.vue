@@ -148,40 +148,102 @@ async function guardar() {
     return
   }
 
-  if (props.modoEdicion) {
-    const payload = {
-      idCliente: Number(form.value.idCliente),
-      idUsuario: authStore.usuario?.id,
-      total: form.value.total,
-      observacion: form.value.observacion,
-    }
-    await axios.patch(`/ventas/${form.value.id}`, payload)
-  } else {
-    if (detalles.value.length === 0) {
-      alert('Agregue al menos un producto')
-      return
-    }
-    const ventaResponse = await axios.post('/ventas', {
-      idCliente: Number(form.value.idCliente),
-      idUsuario: form.value.idUsuario,
-      total: form.value.total,
-      observacion: form.value.observacion,
-    })
-    const ventaId = ventaResponse.data.id
-    for (const detalle of detalles.value) {
-      await axios.post('/detalle-ventas', {
-        idVenta: ventaId,
-        idProducto: detalle.idProducto,
-        cantidad: detalle.cantidad,
-        precioUnitario: detalle.precioUnitario,
-        subtotal: detalle.subtotal,
+  try {
+    if (props.modoEdicion) {
+      const payload = {
+        idCliente: Number(form.value.idCliente),
+        idUsuario: authStore.usuario?.id,
+        total: form.value.total,
+        observacion: form.value.observacion,
+      }
+      await axios.patch(`/ventas/${form.value.id}`, payload)
+    } else {
+      if (detalles.value.length === 0) {
+        alert('Agregue al menos un producto')
+        return
+      }
+      const ventaResponse = await axios.post('/ventas', {
+        idCliente: Number(form.value.idCliente),
+        idUsuario: form.value.idUsuario,
+        total: form.value.total,
+        observacion: form.value.observacion,
       })
+      const ventaId = ventaResponse.data.id
+      for (const detalle of detalles.value) {
+        await axios.post('/detalle-ventas', {
+          idVenta: ventaId,
+          idProducto: detalle.idProducto,
+          cantidad: detalle.cantidad,
+          precioUnitario: detalle.precioUnitario,
+          subtotal: detalle.subtotal,
+        })
+      }
     }
-  }
 
-  emit('guardar')
+    limpiarFormulario()
+
+    emit('guardar')
+    emit('close')
+  } catch (error) {
+    console.error('Error al guardar:', error)
+    alert('Ocurrió un error al guardar la venta')
+  }
+}
+
+function limpiarFormulario() {
+  form.value = {
+    id: 0,
+    idCliente: 0,
+    idUsuario: authStore.usuario?.id || 0,
+    total: 0,
+    observacion: '',
+  }
+  
+  detalles.value = []
+  
+  buscarCliente.value = ''
+  
+  productoSeleccionado.value = 0
+  cantidadSeleccionada.value = 1
+  
+  nuevoCliente.value = {
+    nombre: '',
+    nit: '',
+  }
+  mostrarFormCliente.value = false
+}
+
+function cerrarModal() {
+  limpiarFormulario()
   emit('close')
 }
+
+watch(
+  () => props.venta,
+  (val) => {
+    if (val && props.modoEdicion) {
+      form.value = {
+        ...val,
+        idCliente: Number(val.idCliente || val.cliente?.id || 0),
+        idUsuario: Number(val.idUsuario || val.usuario?.id || authStore.usuario?.id || 0),
+        total: Number(val.total),
+      }
+      if (val.detalles) {
+        detalles.value = val.detalles.map(d => ({
+          idProducto: d.idProducto,
+          cantidad: d.cantidad,
+          precioUnitario: d.precioUnitario,
+          subtotal: d.subtotal,
+          productoNombre: d.producto?.nombre || `Producto #${d.idProducto}`
+        }))
+      }
+    } else if (!val) {
+      limpiarFormulario()
+    }
+  },
+  { immediate: true }
+)
+
 
 onMounted(() => {
   obtenerClientes()

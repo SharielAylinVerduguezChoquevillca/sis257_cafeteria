@@ -19,7 +19,13 @@ export class VentasService {
 
   findAll() {
     return this.repo.find({
-      relations: { cliente: true, usuario: true, detalles: true },
+      relations: {
+        cliente: true,
+        usuario: true,
+        detalles: {
+          producto: true,
+        },
+      },
       order: { fecha: 'DESC' },
     });
   }
@@ -27,7 +33,13 @@ export class VentasService {
   async findOne(id: number) {
     const venta = await this.repo.findOne({
       where: { id },
-      relations: { cliente: true, usuario: true, detalles: true },
+      relations: {
+        cliente: true,
+        usuario: true,
+        detalles: {
+          producto: true,
+        },
+      },
     });
     if (!venta) throw new NotFoundException(`Venta #${id} no encontrada`);
     return venta;

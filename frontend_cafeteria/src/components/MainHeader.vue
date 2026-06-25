@@ -24,7 +24,10 @@ function handleLogout() {
         sidenav-close
       ></i>
       <a class="block px-4 py-4 m-0 text-sm whitespace-nowrap" href="#" style="color: #f3e5d5">
-        <span class="font-semibold transition-all duration-200 ease-nav-brand">El Buen Gusto</span>
+        <div class="logo-container">
+          <img src="/src/assets/img/logo.1.png" alt="main_logo" class="logo-img" />
+          <span class="logo-text">El Buen Gusto</span>
+        </div>
       </a>
     </div>
 
@@ -74,7 +77,6 @@ function handleLogout() {
           </RouterLink>
         </li>
 
-
         <li class="w-full mt-4 mb-1">
           <h6 class="sidebar-section">Cuenta</h6>
         </li>
@@ -121,6 +123,27 @@ function handleLogout() {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #b08d6a;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  height: 45px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f3e5d5;
+  letter-spacing: 0.5px;
+  line-height: 1;
 }
 
 .nav-link {

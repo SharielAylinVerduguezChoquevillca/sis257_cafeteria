@@ -27,7 +27,6 @@ function handleGuardar() {
 <template>
   <div class="page-section">
     <div class="page-container">
-      <!-- Encabezado -->
       <div class="heading">
         <span class="heading-sub">Gestión</span>
         <h2 class="heading-title">Categorías</h2>
